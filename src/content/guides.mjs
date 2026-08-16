@@ -1,7 +1,7 @@
 export const PLAY = {
   ko: {
-    metaTitle: '컴퓨터와 무료 체스 두기 | 초급·중급·고급 AI - ChessStep',
-    metaDescription: '설치와 로그인 없이 브라우저에서 컴퓨터와 무료 체스를 두세요. 초급·중급·고급 난이도, 백·흑 선택, 힌트, 되돌리기를 지원합니다.',
+    metaTitle: '컴퓨터와 무료 체스 두기 | ChessStep',
+    metaDescription: '설치와 로그인 없이 브라우저에서 무료 체스를 두세요. 난이도 선택, 힌트, 되돌리기를 지원합니다.',
     title: '컴퓨터와 무료 체스 두기',
     intro: '난이도와 진영을 고른 뒤 기물을 끌어 도착 칸에 놓으세요. 대국은 서버로 전송되지 않고 현재 브라우저에서만 계산됩니다. 결과보다 매 수의 후보수와 상대 위협을 확인하는 연습에 활용해 보세요.',
     difficulty: [
@@ -22,8 +22,8 @@ export const PLAY = {
     ]
   },
   en: {
-    metaTitle: 'Play Free Chess Against the Computer | ChessStep',
-    metaDescription: 'Play chess in your browser against beginner, intermediate, or advanced computer opponents. Choose a side, get hints, and undo moves. No sign-in required.',
+    metaTitle: 'Play Chess vs Computer | ChessStep',
+    metaDescription: 'Play browser chess against the computer with levels, hints, and undo.',
     title: 'Play free chess against the computer',
     intro: 'Choose a level and side, then drag a piece to its destination. The game runs locally in your browser and is not sent to a server. Use it to practice candidate moves and threat awareness, not just to chase a result.',
     difficulty: [
@@ -47,8 +47,8 @@ export const PLAY = {
 
 export const LEARN = {
   ko: {
-    metaTitle: '무료 체스 학습 코스 | 초급·중급·고급 로드맵 - ChessStep',
-    metaDescription: '체스 규칙부터 전술, 오프닝, 포지션 평가, 엔드게임까지 초급·중급·고급 18개 레슨으로 배우는 무료 체스 학습 로드맵입니다.',
+    metaTitle: '무료 체스 학습 코스 | ChessStep',
+    metaDescription: '체스 규칙부터 전술, 오프닝, 포지션 평가, 엔드게임까지 18개 무료 레슨으로 배우세요.',
     title: '초급부터 고급까지 체스 학습 로드맵',
     intro: '레이팅 숫자보다 현재 반복되는 실수에 맞춰 코스를 선택하세요. 각 단계는 여섯 개 핵심 레슨으로 구성되며, 읽기와 대국, 복기를 하나의 주기로 연결합니다.',
     path: [
@@ -66,8 +66,8 @@ export const LEARN = {
     method: ['레슨을 읽고 핵심 포인트를 한 문장으로 요약합니다.', '관련 난이도의 컴퓨터와 한 판 둡니다.', '힌트를 보기 전에 자신의 후보수와 계산을 기록합니다.', '첫 번째 큰 실수를 해당 코스 주제로 분류해 다음 목표로 사용합니다.']
   },
   en: {
-    metaTitle: 'Free Chess Courses | Beginner to Advanced Roadmap - ChessStep',
-    metaDescription: 'Learn chess rules, tactics, openings, evaluation, and endgames through 18 free lessons across beginner, intermediate, and advanced courses.',
+    metaTitle: 'Free Chess Courses | ChessStep',
+    metaDescription: 'Learn rules, tactics, openings, evaluation, and endgames in 18 free lessons.',
     title: 'A chess learning roadmap from beginner to advanced',
     intro: 'Choose your starting point by the mistakes you repeat, not by a rating label. Each stage has six focused lessons and connects reading, playing, and review in one cycle.',
     path: [
@@ -89,8 +89,8 @@ export const LEARN = {
 export const GUIDES = {
   rules: {
     ko: {
-      metaTitle: '체스 규칙 총정리 | 기물 이동·캐슬링·승패 조건 - ChessStep',
-      metaDescription: '체스판 배치, 기물 이동, 체크, 체크메이트, 캐슬링, 앙파상, 폰 승격, 무승부 조건까지 초보자가 이해하기 쉽게 정리했습니다.',
+      metaTitle: '체스 규칙 총정리 | ChessStep',
+      metaDescription: '체스판 배치, 기물 이동, 체크메이트, 캐슬링, 앙파상, 승격, 무승부 조건을 쉽게 정리했습니다.',
       title: '체스 규칙: 처음 두기 전에 알아야 할 모든 것',
       intro: '체스는 상대 킹을 실제로 잡는 게임이 아니라 피할 수 없는 공격인 체크메이트를 만드는 게임입니다. 아래 순서대로 읽으면 바로 첫 대국을 시작할 수 있습니다.',
       sections: [
@@ -104,8 +104,8 @@ export const GUIDES = {
       faq: [['킹을 실제로 잡나요?', '아니요. 피할 수 없는 체크인 체크메이트가 만들어지는 순간 게임이 끝납니다.'], ['캐슬링 중 룩이 공격받아도 되나요?', '네. 킹의 출발·통과·도착 칸이 안전하면 룩이 공격받고 있어도 캐슬링할 수 있습니다.'], ['폰은 언제 두 칸 움직일 수 있나요?', '각 폰이 자신의 시작 랭크에 있고 앞의 두 칸이 모두 비어 있을 때 한 번에 두 칸 전진할 수 있습니다.']]
     },
     en: {
-      metaTitle: 'Chess Rules | Moves, Castling, and Game Endings - ChessStep',
-      metaDescription: 'Learn board setup, piece movement, check, checkmate, castling, en passant, promotion, notation, and draw conditions in one clear chess rules guide.',
+      metaTitle: 'Chess Rules Guide | ChessStep',
+      metaDescription: 'Learn setup, piece moves, checkmate, castling, en passant, promotion, and draws.',
       title: 'Chess rules: Everything before your first game',
       intro: 'Chess is not won by physically capturing the king. The goal is checkmate: an attack the king cannot escape. Follow the sections in order and you will be ready to play.',
       sections: [
@@ -122,8 +122,8 @@ export const GUIDES = {
 
   tactics: {
     ko: {
-      metaTitle: '체스 전술 패턴 8가지 | 포크·핀·스큐어 훈련 - ChessStep',
-      metaDescription: '체스 실전에서 자주 나오는 포크, 핀, 스큐어, 발견 공격, 제거, 유인, 과부하, 백랭크 메이트를 예시와 탐색 순서로 배워 보세요.',
+      metaTitle: '체스 전술 패턴 8가지 | ChessStep',
+      metaDescription: '포크, 핀, 스큐어, 발견 공격, 제거, 유인, 과부하, 백랭크 메이트를 탐색 순서로 배우세요.',
       title: '체스 전술: 실전에서 찾는 8가지 핵심 패턴',
       intro: '전술은 우연히 떠오르는 묘수가 아니라 기물의 공격 관계가 만든 강제 수순입니다. 패턴 이름을 외우고, 매 수 체크·잡기·위협을 확인하면 실전에서도 발견 확률이 높아집니다.',
       sections: [
@@ -140,8 +140,8 @@ export const GUIDES = {
       faq: [['전술 공부는 하루 몇 문제면 충분한가요?', '정답률을 유지할 수 있는 10~20문제를 꾸준히 푸는 편이 무작정 많은 문제를 빠르게 넘기는 것보다 좋습니다.'], ['정답을 못 찾으면 바로 해설을 봐도 되나요?', '몇 분간 후보수를 만들고 상대의 최선 방어를 계산한 뒤 보세요. 해설 후에는 첫 수만 외우지 말고 패턴과 탐색 단서를 요약하세요.']]
     },
     en: {
-      metaTitle: '8 Essential Chess Tactics | Forks, Pins, and Skewers - ChessStep',
-      metaDescription: 'Learn forks, pins, skewers, discovered attacks, removal, deflection, overload, and back-rank mate with a practical search routine.',
+      metaTitle: '8 Chess Tactics | ChessStep',
+      metaDescription: 'Learn forks, pins, skewers, discovered attacks, overload, and mate patterns.',
       title: 'Chess tactics: Eight patterns to find in real games',
       intro: 'A tactic is not a lucky flash of brilliance. It is a forcing sequence created by the attacking relationships between pieces. Learn the patterns and scan checks, captures, and threats every turn.',
       sections: [
@@ -161,8 +161,8 @@ export const GUIDES = {
 
   openings: {
     ko: {
-      metaTitle: '체스 오프닝 원칙과 추천 수순 | 초보자 가이드 - ChessStep',
-      metaDescription: '중앙 장악, 기물 전개, 캐슬링, 퀸 조기 출격 방지 등 체스 오프닝 핵심 원칙과 이탈리안 게임·퀸즈 갬빗의 기본 계획을 배워 보세요.',
+      metaTitle: '체스 오프닝 원칙 | ChessStep',
+      metaDescription: '중앙 장악, 기물 전개, 캐슬링, 초보자 실수, 이탈리안 게임과 퀸즈 갬빗 계획을 배우세요.',
       title: '체스 오프닝: 수순 암기보다 먼저 배울 원칙',
       intro: '오프닝은 정답 수를 외우는 시험이 아니라 좋은 미들게임을 준비하는 단계입니다. 낯선 수를 만나도 중앙, 전개, 킹 안전이라는 기준으로 판단할 수 있어야 합니다.',
       sections: [
@@ -175,8 +175,8 @@ export const GUIDES = {
       faq: [['오프닝은 몇 수까지 외워야 하나요?', '입문자는 5~8수의 자연스러운 전개와 그 이유를 아는 것으로 충분합니다. 수보다 폰 구조와 기물 배치의 목적을 기억하세요.'], ['하나의 오프닝만 계속 둬도 되나요?', '초기에는 같은 구조를 반복해 계획을 익히는 것이 좋습니다. 이후 다른 중앙 구조를 경험하며 범위를 넓히세요.']]
     },
     en: {
-      metaTitle: 'Chess Opening Principles and Starter Lines - ChessStep',
-      metaDescription: 'Learn center control, development, castling, common opening mistakes, and the basic plans of the Italian Game and Queen’s Gambit.',
+      metaTitle: 'Chess Opening Principles | ChessStep',
+      metaDescription: 'Learn center control, development, castling, common mistakes, and starter plans.',
       title: 'Chess openings: Principles before memorized moves',
       intro: 'The opening is not a test of exact recall. It prepares a playable middlegame. Center control, development, and king safety let you respond sensibly even when the opponent leaves theory.',
       sections: [
@@ -192,8 +192,8 @@ export const GUIDES = {
 
   endgames: {
     ko: {
-      metaTitle: '체스 엔드게임 기초 | 킹·폰·룩 마무리 원칙 - ChessStep',
-      metaDescription: '킹 활성화, 오포지션, 패스드 폰, 폰 레이스, 룩 활성화, 기본 체크메이트 등 체스 엔드게임 핵심 원칙을 정리했습니다.',
+      metaTitle: '체스 엔드게임 기초 | ChessStep',
+      metaDescription: '킹 활성화, 오포지션, 패스드 폰, 폰 레이스, 룩 활동성, 기본 체크메이트를 배우세요.',
       title: '체스 엔드게임: 작은 차이를 승리로 바꾸는 법',
       intro: '기물이 줄어들면 킹이 강해지고 한 번의 폰 이동이 되돌릴 수 없는 결정을 만듭니다. 정확한 계산과 기본 포지션 지식이 미들게임보다 더 직접적으로 결과를 좌우합니다.',
       sections: [
@@ -206,8 +206,8 @@ export const GUIDES = {
       faq: [['엔드게임을 언제부터 공부해야 하나요?', '기물 이동을 익힌 직후 퀸·룩 메이트와 기본 폰 엔드게임부터 시작하는 것이 좋습니다.'], ['폰이 하나 많으면 항상 이기나요?', '아닙니다. 킹 위치, 폰 구조, 룩 활동성에 따라 무승부이거나 오히려 불리할 수 있습니다.']]
     },
     en: {
-      metaTitle: 'Chess Endgame Basics | Kings, Pawns, and Rooks - ChessStep',
-      metaDescription: 'Learn king activity, opposition, passed pawns, pawn races, active rooks, and essential basic checkmates in a clear endgame guide.',
+      metaTitle: 'Chess Endgame Basics | ChessStep',
+      metaDescription: 'Learn king activity, opposition, passed pawns, rook activity, and basic mates.',
       title: 'Chess endgames: Convert small advantages',
       intro: 'With fewer pieces, the king becomes strong and every pawn move is an irreversible decision. Accurate calculation and knowledge of key positions directly determine the result.',
       sections: [
@@ -224,8 +224,8 @@ export const GUIDES = {
 
 export const ABOUT = {
   ko: {
-    metaTitle: 'ChessStep 소개 | 무료 이중언어 체스 학습 사이트',
-    metaDescription: 'ChessStep의 목표, 학습 설계, 개인정보 처리 방식, 브라우저 체스 AI의 범위와 사이트 활용법을 안내합니다.',
+    metaTitle: 'ChessStep 소개 | 무료 체스 학습',
+    metaDescription: 'ChessStep의 학습 설계, 개인정보 처리 방식, 브라우저 체스 AI 범위와 활용법을 안내합니다.',
     title: '대국과 학습을 한곳에 연결한 ChessStep',
     intro: 'ChessStep은 체스를 처음 배우는 사람부터 포지션 계획을 연습하는 플레이어까지, 별도 설치와 로그인 없이 사용할 수 있도록 만든 한국어·영어 정적 학습 프로젝트입니다.',
     principles: [
@@ -240,8 +240,8 @@ export const ABOUT = {
     privacy: '기본 프로젝트에는 회원가입, 서버 로그 저장, 광고 SDK, 외부 체스 API가 없습니다. 선택적으로 GA 측정 ID를 설정할 수 있으므로 실제 운영 시에는 사용하는 분석 도구에 맞춘 개인정보처리방침을 추가해야 합니다.'
   },
   en: {
-    metaTitle: 'About ChessStep | Free Bilingual Chess Learning Site',
-    metaDescription: 'Learn the goals, learning design, privacy approach, and limitations of the browser chess AI behind ChessStep.',
+    metaTitle: 'About ChessStep | Chess Learning',
+    metaDescription: 'Learn ChessStep goals, learning design, privacy approach, and browser AI limits.',
     title: 'ChessStep connects practice and learning',
     intro: 'ChessStep is a static chess learning site in Korean and English, built for first-time players through students working on positional planning, without requiring installation or an account.',
     principles: [

@@ -27,6 +27,10 @@ function firstMatch(text, expression) {
   return text.match(expression)?.[1]?.trim() || '';
 }
 
+function charLength(value) {
+  return [...value].length;
+}
+
 function routeFromFile(filename) {
   const relative = path.relative(dist, filename).split(path.sep).join('/');
   if (relative === 'index.html') return '/';
@@ -62,8 +66,17 @@ for (const file of pageFiles) {
 
   const title = firstMatch(html, /<title>([^<]+)<\/title>/i);
   const description = firstMatch(html, /<meta\s+name="description"\s+content="([^"]+)"/i);
-  if (title.length > 65) warnings.push(`${label}: title is ${title.length} characters`);
-  if (description.length < 60 || description.length > 180) warnings.push(`${label}: description is ${description.length} characters`);
+  const ogTitle = firstMatch(html, /<meta\s+property="og:title"\s+content="([^"]+)"/i);
+  const ogDescription = firstMatch(html, /<meta\s+property="og:description"\s+content="([^"]+)"/i);
+  const titleLength = charLength(title);
+  const descriptionLength = charLength(description);
+  const ogTitleLength = charLength(ogTitle);
+  const ogDescriptionLength = charLength(ogDescription);
+  if (titleLength > 40) failures.push(`${label}: title is ${titleLength} characters; keep it within 40 for Naver`);
+  if (descriptionLength > 80) failures.push(`${label}: description is ${descriptionLength} characters; keep it within 80 for Naver`);
+  if (ogTitleLength > 40) failures.push(`${label}: Open Graph title is ${ogTitleLength} characters; keep it within 40 for Naver`);
+  if (ogDescriptionLength > 80) failures.push(`${label}: Open Graph description is ${ogDescriptionLength} characters; keep it within 80 for Naver`);
+  if (descriptionLength < 40) warnings.push(`${label}: description is ${descriptionLength} characters`);
 
   for (const match of html.matchAll(/href="(\/[^"]*)"/g)) {
     const href = match[1].split('#')[0].split('?')[0];

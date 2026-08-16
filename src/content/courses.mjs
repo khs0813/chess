@@ -1,8 +1,8 @@
 export const COURSES = {
   ko: {
     beginner: {
-      metaTitle: '체스 초급 코스 | 규칙부터 체크메이트까지 - ChessStep',
-      metaDescription: '체스 입문자를 위한 무료 초급 코스입니다. 기물 이동, 기물 가치, 체크와 체크메이트, 캐슬링, 실수 줄이기, 기본 메이트를 6개 레슨으로 배웁니다.',
+      metaTitle: '체스 초급 코스 | ChessStep',
+      metaDescription: '기물 이동, 가치, 체크메이트, 캐슬링, 실수 줄이기, 기본 메이트를 배우는 무료 초급 코스입니다.',
       title: '초급 코스: 처음 시작하는 체스',
       level: '초급', duration: '약 90분', lessonCount: 6,
       intro: '말의 움직임을 외우는 데서 끝내지 않고, 매 수 무엇을 확인해야 하는지까지 익히는 입문 과정입니다. 레슨을 순서대로 읽은 뒤 초급 컴퓨터와 짧게 대국하면 가장 빠르게 감각을 만들 수 있습니다.',
@@ -95,8 +95,8 @@ export const COURSES = {
     },
 
     intermediate: {
-      metaTitle: '체스 중급 코스 | 전술과 후보수 계산 훈련 - ChessStep',
-      metaDescription: '포크, 핀, 스큐어, 제거, 후보수 계산, 오프닝 계획, 폰 엔드게임을 배우는 무료 체스 중급 코스입니다. 실전에서 놓치는 전술을 줄여 보세요.',
+      metaTitle: '체스 중급 코스 | ChessStep',
+      metaDescription: '포크, 핀, 스큐어, 후보수 계산, 오프닝 계획, 폰 엔드게임을 배우는 무료 중급 코스입니다.',
       title: '중급 코스: 전술과 후보수 훈련',
       level: '중급', duration: '약 120분', lessonCount: 6,
       intro: '규칙은 알지만 좋은 수를 꾸준히 찾기 어려운 플레이어를 위한 과정입니다. 패턴을 외우는 데 그치지 않고, 체크·잡기·위협을 후보수로 만들고 상대의 최선 응수까지 계산하는 순서를 훈련합니다.',
@@ -187,8 +187,8 @@ export const COURSES = {
     },
 
     advanced: {
-      metaTitle: '체스 고급 코스 | 포지션 평가와 계획 세우기 - ChessStep',
-      metaDescription: '폰 구조, 약점, 기물 활동성, 프로필락시스, 교환 판단, 룩 엔드게임을 다루는 무료 체스 고급 코스입니다. 후보수와 장기 계획을 연결하세요.',
+      metaTitle: '체스 고급 코스 | ChessStep',
+      metaDescription: '폰 구조, 약점, 활동성, 프로필락시스, 교환 판단, 룩 엔드게임을 배우는 무료 고급 코스입니다.',
       title: '고급 코스: 포지션 평가와 계획',
       level: '고급', duration: '약 150분', lessonCount: 6,
       intro: '전술이 즉시 보이지 않는 포지션에서 무엇을 해야 할지 판단하는 과정입니다. 정적 요소와 동적 요소를 분리해 평가하고, 상대 계획을 예방하며, 유리한 형태의 엔드게임으로 전환하는 실전 의사결정을 다룹니다.',
@@ -277,8 +277,8 @@ export const COURSES = {
 
   en: {
     beginner: {
-      metaTitle: 'Beginner Chess Course | Rules to Checkmate - ChessStep',
-      metaDescription: 'A free six-lesson beginner chess course covering legal moves, piece values, check and mate, castling, blunder prevention, and basic checkmates.',
+      metaTitle: 'Beginner Chess Course | ChessStep',
+      metaDescription: 'Learn legal moves, piece values, castling, blunder checks, and basic mates.',
       title: 'Beginner course: Chess from the first move',
       level: 'Beginner', duration: 'About 90 min', lessonCount: 6,
       intro: 'This course goes beyond memorizing how the pieces move. You will learn a repeatable checklist for every turn, then apply each lesson immediately against the beginner computer.',
@@ -371,8 +371,8 @@ export const COURSES = {
     },
 
     intermediate: {
-      metaTitle: 'Intermediate Chess Course | Tactics and Calculation - ChessStep',
-      metaDescription: 'A free intermediate chess course on forks, pins, skewers, removing defenders, candidate moves, opening plans, and pawn endgames.',
+      metaTitle: 'Intermediate Chess Course | ChessStep',
+      metaDescription: 'Train forks, pins, skewers, candidate moves, opening plans, and pawn endings.',
       title: 'Intermediate course: Tactics and candidate moves',
       level: 'Intermediate', duration: 'About 120 min', lessonCount: 6,
       intro: 'For players who know the rules but struggle to find strong moves consistently. You will turn tactical patterns into a repeatable search process and calculate the opponent’s best response, not the reply you hope to see.',
@@ -463,8 +463,8 @@ export const COURSES = {
     },
 
     advanced: {
-      metaTitle: 'Advanced Chess Course | Evaluation and Planning - ChessStep',
-      metaDescription: 'A free advanced chess course on pawn structures, weak squares, activity, prophylaxis, trades, rook endings, and practical calculation.',
+      metaTitle: 'Advanced Chess Course | ChessStep',
+      metaDescription: 'Study pawn structures, weak squares, activity, trades, and rook endings.',
       title: 'Advanced course: Evaluation and planning',
       level: 'Advanced', duration: 'About 150 min', lessonCount: 6,
       intro: 'Learn what to do when there is no immediate tactic. Separate static and dynamic factors, anticipate the opponent’s plan, and choose transformations that lead to favorable endings.',

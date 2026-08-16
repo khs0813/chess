@@ -29,8 +29,8 @@ export const UI = {
 
 export const HOME = {
   ko: {
-    metaTitle: '컴퓨터와 무료 체스 두기 | 초급·중급·고급 체스 코스 - ChessStep',
-    metaDescription: '로그인 없이 컴퓨터와 무료 체스를 두고 초급·중급·고급 코스로 규칙, 전술, 오프닝, 엔드게임을 단계별로 배우세요. 모바일과 PC 모두 지원합니다.',
+    metaTitle: '무료 컴퓨터 체스와 체스 강좌 | ChessStep',
+    metaDescription: '로그인 없이 컴퓨터와 체스를 두고 초급·중급·고급 강좌로 규칙, 전술, 오프닝, 엔드게임을 배우세요.',
     eyebrow: '무료 체스 학습 · 브라우저에서 바로 실행',
     h1: '한 판 두고,<br>한 단계씩<br><em>강해지는 체스</em>',
     lead: '설치도 회원가입도 필요 없습니다. 초급·중급·고급 AI와 대국하고, 수준별 코스를 따라가며 “왜 이 수가 좋은지”를 이해해 보세요.',
@@ -54,8 +54,8 @@ export const HOME = {
     ]
   },
   en: {
-    metaTitle: 'Play Free Computer Chess and Learn | ChessStep',
-    metaDescription: 'Play free chess against beginner, intermediate, or advanced computer opponents. Learn rules, tactics, openings, and endgames through English courses on mobile or desktop.',
+    metaTitle: 'Free Computer Chess | ChessStep',
+    metaDescription: 'Play free computer chess and learn rules, tactics, openings, and endgames.',
     eyebrow: 'Free chess learning · Runs in your browser',
     h1: 'Play one game. Get <em>one step stronger.</em>',
     lead: 'No installation and no account. Play against three computer opponents, then follow structured courses that explain not only which move works, but why it works.',
