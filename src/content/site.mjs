@@ -1,7 +1,7 @@
 export const SITE = Object.freeze({
   name: 'ChessStep',
   legalName: 'ChessStep',
-  defaultUrl: 'https://www.gameonchess.com',
+  defaultUrl: 'https://chess-yf3x.onrender.com',
   foundingYear: 2026,
   themeColor: '#184b35',
   locale: {
@@ -21,7 +21,8 @@ export const ROUTES = Object.freeze({
   tactics: { ko: '/tactics/', en: '/en/tactics/' },
   openings: { ko: '/openings/', en: '/en/openings/' },
   endgames: { ko: '/endgames/', en: '/en/endgames/' },
-  about: { ko: '/about/', en: '/en/about/' }
+  about: { ko: '/about/', en: '/en/about/' },
+  privacy: { ko: '/privacy/', en: '/en/privacy/' }
 });
 
 export function route(key, lang) {

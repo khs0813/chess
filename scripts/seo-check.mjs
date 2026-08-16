@@ -8,6 +8,36 @@ const dist = path.join(root, 'dist');
 const failures = [];
 const warnings = [];
 
+async function loadEnvFile(filename) {
+  const raw = await readFile(path.join(root, filename), 'utf8').catch(() => '');
+  for (const line of raw.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
+    if (!match || process.env[match[1]] !== undefined) continue;
+    let value = match[2].trim();
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    process.env[match[1]] = value;
+  }
+}
+
+await loadEnvFile('.env');
+await loadEnvFile('.env.local');
+
+const siteUrl = (process.env.SITE_URL || 'https://chess-yf3x.onrender.com').replace(/\/+$/, '');
+const siteOrigin = new URL(siteUrl).origin;
+const adfitEnabled = (process.env.ADFIT_ENABLED || 'false').trim() === 'true';
+const adfitEnableEn = (process.env.ADFIT_ENABLE_EN || 'false').trim() === 'true';
+const adfitUnits = {
+  desktop: (process.env.ADFIT_PLAY_DESKTOP_160X600 || '').trim(),
+  tablet: (process.env.ADFIT_PLAY_TABLET_728X90 || '').trim(),
+  mobile: (process.env.ADFIT_PLAY_MOBILE_320X50 || '').trim()
+};
+const adfitUnitValues = [...new Set(Object.values(adfitUnits).filter(Boolean))];
+const adfitHasUnit = adfitUnitValues.length > 0;
+
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
@@ -20,7 +50,10 @@ async function walk(directory) {
 }
 
 function countMatches(text, expression) {
-  return [...text.matchAll(expression)].length;
+  expression.lastIndex = 0;
+  const matches = [...text.matchAll(expression)].length;
+  expression.lastIndex = 0;
+  return matches;
 }
 
 function firstMatch(text, expression) {
@@ -42,11 +75,13 @@ const allFiles = await walk(dist);
 const htmlFiles = allFiles.filter((file) => file.endsWith('.html'));
 const pageFiles = htmlFiles.filter((file) => path.basename(file) !== '404.html');
 const validRoutes = new Set(pageFiles.map(routeFromFile));
+const pageHtml = new Map();
 
 for (const file of pageFiles) {
   const html = await readFile(file, 'utf8');
   const route = routeFromFile(file);
   const label = route === '/' ? '/' : route;
+  pageHtml.set(route, html);
 
   if (!/^<!doctype html>/i.test(html)) failures.push(`${label}: doctype missing`);
   if (!/<html\s+lang="(?:ko|en)"/i.test(html)) failures.push(`${label}: html lang must be ko or en`);
@@ -54,6 +89,14 @@ for (const file of pageFiles) {
   if (countMatches(html, /<h1(?:\s|>)/gi) !== 1) failures.push(`${label}: exactly one h1 is required`);
   if (countMatches(html, /<meta\s+name="description"\s+content="[^"]+"/gi) !== 1) failures.push(`${label}: meta description missing`);
   if (countMatches(html, /<link\s+rel="canonical"\s+href="https?:\/\/[^"]+"/gi) !== 1) failures.push(`${label}: canonical missing`);
+  const canonicalHref = firstMatch(html, /<link\s+rel="canonical"\s+href="([^"]+)"/i);
+  if (canonicalHref) {
+    try {
+      if (new URL(canonicalHref).origin !== siteOrigin) failures.push(`${label}: canonical host does not match SITE_URL`);
+    } catch {
+      failures.push(`${label}: canonical URL is invalid`);
+    }
+  }
   if (!/<link\s+rel="alternate"\s+type="application\/rss\+xml"\s+title="[^"]+"\s+href="https?:\/\/[^"]+\/rss\.xml"/i.test(html)) {
     failures.push(`${label}: RSS discovery link missing`);
   }
@@ -63,6 +106,7 @@ for (const file of pageFiles) {
   }
   if (!/<script\s+type="application\/ld\+json">[\s\S]+?<\/script>/i.test(html)) failures.push(`${label}: JSON-LD missing`);
   if (!/<meta\s+property="og:title"/i.test(html)) failures.push(`${label}: Open Graph metadata missing`);
+  if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(html)) failures.push(`${label}: AdFit <ins> must be created only at runtime`);
 
   const title = firstMatch(html, /<title>([^<]+)<\/title>/i);
   const description = firstMatch(html, /<meta\s+name="description"\s+content="([^"]+)"/i);
@@ -88,7 +132,7 @@ for (const file of pageFiles) {
 
 const requiredFiles = [
   'index.html', 'en/index.html', 'robots.txt', 'sitemap.xml', 'rss.xml', 'site.webmanifest',
-  'favicon.svg', 'og-default.png', 'assets/styles.css', 'assets/chess-engine.js',
+  'favicon.svg', 'og-default.png', 'assets/styles.css', 'assets/adfit.js', 'assets/chess-engine.js',
   'assets/chess-ai.js', 'assets/chess-worker.js', 'assets/game.js', 'assets/site.js'
 ];
 for (const relative of requiredFiles) {
@@ -121,6 +165,46 @@ if (!/<atom:link[^>]+rel="self"[^>]+type="application\/rss\+xml"/.test(rss)) fai
 if (rssItemCount !== pageFiles.length) failures.push(`rss.xml: expected ${pageFiles.length} items, found ${rssItemCount}`);
 if (countMatches(rss, /<item>[\s\S]*?<dc:language>ko-KR<\/dc:language>[\s\S]*?<\/item>/g) !== pageFiles.length / 2) failures.push('rss.xml: ko-KR item language count mismatch');
 if (countMatches(rss, /<item>[\s\S]*?<dc:language>en-US<\/dc:language>[\s\S]*?<\/item>/g) !== pageFiles.length / 2) failures.push('rss.xml: en-US item language count mismatch');
+
+const koPlayHtml = pageHtml.get('/play/') || '';
+const enPlayHtml = pageHtml.get('/en/play/') || '';
+const adfitModulePattern = /<script\s+type="module"\s+src="\/assets\/adfit\.js"><\/script>/g;
+const koPlayAdfitScripts = countMatches(koPlayHtml, adfitModulePattern);
+const enPlayAdfitScripts = countMatches(enPlayHtml, adfitModulePattern);
+
+for (const [route, html] of pageHtml.entries()) {
+  if (route !== '/play/' && route !== '/en/play/' && adfitModulePattern.test(html)) {
+    failures.push(`${route}: AdFit module must only load on play pages`);
+  }
+  adfitModulePattern.lastIndex = 0;
+}
+
+if (adfitEnabled && adfitHasUnit) {
+  if (koPlayAdfitScripts !== 1) failures.push('/play/: AdFit module must be included exactly once when Korean ads are enabled');
+  if (adfitEnableEn) {
+    if (enPlayAdfitScripts !== 1) failures.push('/en/play/: AdFit module must be included exactly once when English ads are enabled');
+  } else {
+    if (enPlayAdfitScripts !== 0) failures.push('/en/play/: AdFit module must not load when ADFIT_ENABLE_EN=false');
+    for (const value of adfitUnitValues) {
+      if (enPlayHtml.includes(value)) failures.push('/en/play/: AdFit unit ID leaked while English ads are disabled');
+    }
+  }
+} else {
+  if (koPlayAdfitScripts !== 0 || enPlayAdfitScripts !== 0) failures.push('AdFit module must not load when ads are disabled or no unit ID is configured');
+}
+
+const searchableFiles = allFiles.filter((file) => /\.(?:html|js|css|xml|txt|json|webmanifest|svg)$/i.test(file));
+const searchableText = (await Promise.all(searchableFiles.map((file) => readFile(file, 'utf8').catch(() => '')))).join('\n');
+if (!adfitEnabled) {
+  for (const value of adfitUnitValues) {
+    if (searchableText.includes(value)) failures.push('dist: AdFit unit ID leaked while ADFIT_ENABLED=false');
+  }
+}
+
+const adfitAsset = await readFile(path.join(dist, 'assets/adfit.js'), 'utf8').catch(() => '');
+if (/innerHTML\s*=/.test(adfitAsset)) failures.push('assets/adfit.js: do not build ad markup with innerHTML');
+if (/addEventListener\(\s*['"](?:resize|orientationchange)['"]/.test(adfitAsset)) failures.push('assets/adfit.js: do not remount ads on resize or orientationchange');
+if (countMatches(adfitAsset, /createElement\(\s*['"]ins['"]\s*\)/g) !== 1) failures.push('assets/adfit.js: expected one runtime <ins> creation path');
 
 if (warnings.length) {
   console.warn(`SEO warnings (${warnings.length}):`);

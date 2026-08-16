@@ -7,7 +7,7 @@ import { Chess, PIECE_SYMBOLS, colorOf } from '../src/assets/chess-engine.js';
 import { SITE, ROUTES, route } from '../src/content/site.mjs';
 import { UI, HOME, COURSE_SUMMARIES } from '../src/content/content.mjs';
 import { COURSES } from '../src/content/courses.mjs';
-import { PLAY, LEARN, GUIDES, ABOUT } from '../src/content/guides.mjs';
+import { PLAY, LEARN, GUIDES, ABOUT, PRIVACY } from '../src/content/guides.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -38,6 +38,20 @@ const siteUrl = (process.env.SITE_URL || SITE.defaultUrl).replace(/\/+$/, '');
 const googleVerification = (process.env.GOOGLE_SITE_VERIFICATION || '').trim();
 const naverVerification = (process.env.NAVER_SITE_VERIFICATION || '').trim();
 const gaMeasurementId = (process.env.GA_MEASUREMENT_ID || '').trim();
+const adfitEnabled = (process.env.ADFIT_ENABLED || 'false').trim() === 'true';
+const adfitEnableEn = (process.env.ADFIT_ENABLE_EN || 'false').trim() === 'true';
+const adfitDesktopSticky = (process.env.ADFIT_DESKTOP_STICKY || 'true').trim() === 'true';
+const adfitUnits = {
+  desktop: (process.env.ADFIT_PLAY_DESKTOP_160X600 || '').trim(),
+  tablet: (process.env.ADFIT_PLAY_TABLET_728X90 || '').trim(),
+  mobile: (process.env.ADFIT_PLAY_MOBILE_320X50 || '').trim()
+};
+
+function isAdfitEnabledFor(lang) {
+  if (!adfitEnabled) return false;
+  if (lang === 'en' && !adfitEnableEn) return false;
+  return Boolean(adfitUnits.desktop || adfitUnits.tablet || adfitUnits.mobile);
+}
 
 function esc(value = '') {
   return String(value)
@@ -54,6 +68,26 @@ function absolute(urlPath) {
 
 function jsonLd(value) {
   return JSON.stringify(value).replaceAll('<', '\\u003c');
+}
+
+function adfitPlayAttributes(lang) {
+  if (!isAdfitEnabledFor(lang)) return '';
+  const adLabel = lang === 'ko' ? '광고' : 'Advertisement';
+  return [
+    'data-adfit-play="true"',
+    `data-adfit-label="${esc(adLabel)}"`,
+    `data-adfit-desktop-unit="${esc(adfitUnits.desktop)}"`,
+    `data-adfit-tablet-unit="${esc(adfitUnits.tablet)}"`,
+    `data-adfit-mobile-unit="${esc(adfitUnits.mobile)}"`,
+    `data-adfit-desktop-sticky="${adfitDesktopSticky ? 'true' : 'false'}"`,
+    `data-adfit-has-rail="${adfitUnits.desktop ? 'true' : 'false'}"`
+  ].join(' ');
+}
+
+function playScripts(lang) {
+  const scripts = ['/assets/game.js'];
+  if (isAdfitEnabledFor(lang)) scripts.push('/assets/adfit.js');
+  return scripts;
 }
 
 const TEMPLATE_LABELS = {
@@ -293,6 +327,7 @@ function renderFooter(lang) {
         <a href="${route('rules', lang)}">${esc(ui.nav.rules)}</a>
         <a href="${route('openings', lang)}">${esc(ui.nav.openings)}</a>
         <a href="${route('about', lang)}">${esc(ui.nav.about)}</a>
+        <a href="${route('privacy', lang)}">${lang === 'ko' ? '개인정보처리방침' : 'Privacy'}</a>
       </div>
     </div>
     <div class="footer-bottom"><span>© ${new Date().getUTCFullYear()} ${SITE.name}. ${esc(ui.copyright)}</span><span>${esc(ui.updated)}: ${buildDate}</span></div>
@@ -394,17 +429,29 @@ function renderPlay(lang) {
   const ui = UI[lang];
   const labels = TEMPLATE_LABELS[lang];
   const crumbs = breadcrumbs('play', lang, c.title);
+  const adfitActive = isAdfitEnabledFor(lang);
+  const adfitAttrs = adfitPlayAttributes(lang);
+  const adLabel = lang === 'ko' ? '광고' : 'Advertisement';
   const appSchema = {
     '@type': 'SoftwareApplication', name: c.title, applicationCategory: 'GameApplication', operatingSystem: 'Web',
     url: absolute(route('play', lang)), inLanguage: lang,
     offers: { '@type': 'Offer', price: '0', priceCurrency: lang === 'ko' ? 'KRW' : 'USD' }
   };
-  return `${head({ lang, pageKey: 'play', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [appSchema, faqSchema(c.faq)], scripts: ['/assets/game.js'] })}
+  return `${head({ lang, pageKey: 'play', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [appSchema, faqSchema(c.faq)], scripts: playScripts(lang) })}
 ${renderHeader(lang, 'play')}
-<main id="main"><section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-<section class="chess-app-shell"><div class="container">${gameApp(lang)}
+<main id="main">
+<div class="play-monetized-shell${adfitActive ? ' has-adfit' : ''}"${adfitAttrs ? ` ${adfitAttrs}` : ''}>
+  <div class="play-monetized-grid">
+    <div class="play-primary">
+      <section class="page-hero page-hero--play"><div class="play-inner">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
+      <div class="adfit-inline-host" data-adfit-host="inline"></div>
+      <section class="chess-app-shell"><div class="play-inner">${gameApp(lang)}
   <div class="play-guide"><div class="section-heading"><div><span class="eyebrow">${esc(labels.aiLevels)}</span><h2>${lang === 'ko' ? '난이도 선택 기준' : 'Choose a useful level'}</h2></div></div><div class="play-guide-grid">${c.difficulty.map((item, index) => `<article class="card"><span class="card-icon">${index + 1}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div>
 </div></section>
+    </div>
+    <aside class="adfit-rail-host" data-adfit-host="rail" aria-label="${esc(adLabel)}"></aside>
+  </div>
+</div>
 <section class="section section-soft"><div class="narrow"><div class="section-heading"><div><span class="eyebrow">${esc(labels.howToPractice)}</span><h2>${lang === 'ko' ? '대국을 학습으로 바꾸는 4단계' : 'Turn a game into four learning steps'}</h2></div></div><div class="lesson-list">${c.steps.map(([title, text], index) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${index + 1}</span><div><h3>${esc(title)}</h3><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
 ${renderFaq(c.faq, lang)}
 <section class="section"><div class="container"><div class="cta-panel"><div><h2>${lang === 'ko' ? '대국에서 놓친 개념을 바로 보완하세요' : 'Study the skill your game exposed'}</h2><p>${lang === 'ko' ? '기물 손실이 많았다면 초급, 전술을 놓쳤다면 중급, 계획이 막혔다면 고급 코스로 이동하세요.' : 'Choose beginner for loose pieces, intermediate for missed tactics, or advanced for unclear plans.'}</p></div><a class="button" href="${route('learn', lang)}">${esc(ui.learnNow)}</a></div></div></section>
@@ -503,6 +550,16 @@ ${renderHeader(lang, 'about')}<main id="main"><section class="page-hero"><div cl
 <section class="section"><div class="container"><div class="cta-panel"><div><h2>${lang === 'ko' ? '코드를 바꾸기 쉬운 구조로 만들었습니다' : 'Built to be easy to customize'}</h2><p>${lang === 'ko' ? '브랜드, 도메인, 인증 태그, 코스 콘텐츠, 색상은 중앙 설정과 콘텐츠 파일에서 수정할 수 있습니다.' : 'Brand, domain, verification tags, course content, and colors are separated into clear configuration and content files.'}</p></div><a class="button" href="${route('learn', lang)}">${esc(UI[lang].learnNow)}</a></div></div></section></main>${renderFooter(lang)}`;
 }
 
+function renderPrivacy(lang) {
+  const c = PRIVACY[lang];
+  const crumbs = breadcrumbs('privacy', lang, c.title);
+  const toc = c.sections.map((section) => [section.id, section.title]);
+  return `${head({ lang, pageKey: 'privacy', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, 'privacy')], pageType: 'article' })}
+${renderHeader(lang, 'privacy')}<main id="main"><section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${lang === 'ko' ? '개인정보 안내' : 'Privacy notice'}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
+<section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}</section>`).join('')}
+</article><aside class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${esc(id)}">${esc(label)}</a></li>`).join('')}</ol></aside></div></section></main>${renderFooter(lang)}`;
+}
+
 function render404() {
   return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>404 | ChessStep</title><meta name="robots" content="noindex,follow"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/styles.css"></head><body><main class="not-found"><div><div class="not-found-mark">404</div><h1>페이지를 찾을 수 없습니다</h1><p>The page could not be found.</p><div class="action-row"><a class="button" href="/">한국어 홈</a><a class="button button-secondary" href="/en/">English home</a></div></div></main></body></html>`;
 }
@@ -514,6 +571,7 @@ function pageMeta(key, lang) {
   if (['beginner', 'intermediate', 'advanced'].includes(key)) return COURSES[lang][key];
   if (['rules', 'tactics', 'openings', 'endgames'].includes(key)) return GUIDES[key][lang];
   if (key === 'about') return ABOUT[lang];
+  if (key === 'privacy') return PRIVACY[lang];
   return { title: SITE.name, metaTitle: SITE.name, metaDescription: '' };
 }
 
@@ -578,7 +636,8 @@ async function build() {
     tactics: (lang) => renderGuide(lang, 'tactics'),
     openings: (lang) => renderGuide(lang, 'openings'),
     endgames: (lang) => renderGuide(lang, 'endgames'),
-    about: renderAbout
+    about: renderAbout,
+    privacy: renderPrivacy
   };
 
   for (const lang of ['ko', 'en']) {

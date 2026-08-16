@@ -7,12 +7,24 @@ services:
     autoDeployTrigger: commit
     envVars:
       - key: SITE_URL
-        value: https://www.gameonchess.com
+        value: https://chess-yf3x.onrender.com
       - key: GOOGLE_SITE_VERIFICATION
         sync: false
       - key: NAVER_SITE_VERIFICATION
         sync: false
       - key: GA_MEASUREMENT_ID
+        sync: false
+      - key: ADFIT_ENABLED
+        value: "false"
+      - key: ADFIT_ENABLE_EN
+        value: "false"
+      - key: ADFIT_DESKTOP_STICKY
+        value: "true"
+      - key: ADFIT_PLAY_DESKTOP_160X600
+        sync: false
+      - key: ADFIT_PLAY_TABLET_728X90
+        sync: false
+      - key: ADFIT_PLAY_MOBILE_320X50
         sync: false
     headers:
       - path: /*

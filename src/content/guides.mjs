@@ -16,7 +16,7 @@ export const PLAY = {
       ['대국 후 첫 실수 복기', '수 목록과 되돌리기를 이용해 처음 평가가 크게 나빠진 수를 찾아 대안을 생각합니다.']
     ],
     faq: [
-      ['컴퓨터가 오프라인에서도 동작하나요?', '첫 페이지 로딩에 필요한 파일이 브라우저에 캐시되어 있다면 일부 환경에서 다시 열 수 있지만, 완전한 오프라인 앱을 보장하지는 않습니다. 대국 계산 자체는 외부 API를 사용하지 않습니다.'],
+      ['컴퓨터가 오프라인에서도 동작하나요?', '첫 페이지 로딩에 필요한 파일이 브라우저에 캐시되어 있다면 일부 환경에서 다시 열 수 있지만, 완전한 오프라인 앱을 보장하지는 않습니다. 대국 계산 자체는 외부 체스 API를 사용하지 않습니다. 광고가 활성화된 페이지에서는 Kakao AdFit 스크립트 요청이 발생할 수 있습니다.'],
       ['AI 난이도는 레이팅으로 얼마인가요?', '고정 레이팅을 제공하지 않습니다. 기기 성능과 포지션 복잡도에 따라 탐색 깊이가 달라지므로 학습 단계별 상대라고 보는 것이 정확합니다.'],
       ['대국을 저장할 수 있나요?', '현재 버전은 계정이나 서버 저장을 사용하지 않습니다. 대신 수 목록과 되돌리기 기능으로 한 판 안에서 복기할 수 있고, 전체 기보 내보내기는 확장하기 쉽도록 코드가 분리되어 있습니다.']
     ]
@@ -38,7 +38,7 @@ export const PLAY = {
       ['Review the first serious mistake', 'Use the move list and undo to locate the first move that seriously changed the position, then calculate an alternative.']
     ],
     faq: [
-      ['Does the computer work offline?', 'The calculation itself uses no external API. A previously cached page may reopen in some environments, but this version does not guarantee a fully offline app.'],
+      ['Does the computer work offline?', 'The chess calculation itself uses no external chess API. A previously cached page may reopen in some environments, but this version does not guarantee a fully offline app. When ads are enabled, the page may request the Kakao AdFit script.'],
       ['What rating is each AI level?', 'There is no fixed rating. Search depth varies with device speed and position complexity, so the levels are better understood as learning stages.'],
       ['Can I save a game?', 'This version uses no account or server storage. You can review the current game with the move list and undo, and the code is structured so PGN export can be added later.']
     ]
@@ -231,13 +231,13 @@ export const ABOUT = {
     principles: [
       ['즉시 실행', '대국판과 코스가 모두 브라우저에서 열리며 계정 생성이나 앱 설치를 요구하지 않습니다.'],
       ['설명 가능한 학습', '정답 수만 제시하지 않고 후보수, 상대 위협, 결과 포지션 평가의 순서를 반복합니다.'],
-      ['개인정보 최소화', '대국과 진행률은 서버 데이터베이스를 사용하지 않습니다. 레슨 완료 상태는 현재 기기의 로컬 저장소에만 남습니다.'],
+      ['개인정보 최소화', '대국과 진행률은 서버 데이터베이스를 사용하지 않습니다. 레슨 완료 상태는 현재 기기의 로컬 저장소에만 남고, 광고 제공 시에는 별도 개인정보처리방침에서 외부 스크립트 이용을 안내합니다.'],
       ['검색 친화적 콘텐츠', '한국어와 영어를 별도 URL의 완전한 HTML로 제공해 사용자와 검색엔진 모두 동일한 핵심 내용을 읽을 수 있게 설계했습니다.']
     ],
     limitsTitle: '브라우저 AI의 범위',
     limits: ['학습용 상대이며 전문 대회 엔진의 강도나 정확한 레이팅을 보장하지 않습니다.', '고급 난이도도 기기 성능과 포지션 복잡도에 따라 탐색 깊이가 달라집니다.', '추천 수는 학습 보조 수단이며 먼저 자신의 후보수와 이유를 만든 뒤 비교하는 방식이 좋습니다.'],
     privacyTitle: '데이터와 개인정보',
-    privacy: '기본 프로젝트에는 회원가입, 서버 로그 저장, 광고 SDK, 외부 체스 API가 없습니다. 선택적으로 GA 측정 ID를 설정할 수 있으므로 실제 운영 시에는 사용하는 분석 도구에 맞춘 개인정보처리방침을 추가해야 합니다.'
+    privacy: '대국과 레슨 진행 데이터는 현재 브라우저의 로컬 저장소에만 보관됩니다. 광고 제공을 위해 Kakao AdFit 외부 스크립트가 로드될 수 있으며, 광고 제공과 성과 측정 과정에서 접속·기기 정보 또는 쿠키 등이 처리될 수 있습니다. 실제 운영 정책은 개인정보처리방침에서 안내합니다.'
   },
   en: {
     metaTitle: 'About ChessStep | Chess Learning',
@@ -247,12 +247,133 @@ export const ABOUT = {
     principles: [
       ['Start immediately', 'The board and courses open in the browser without account creation or app installation.'],
       ['Explain the process', 'Lessons repeat candidate generation, opponent threats, and evaluation of the resulting position instead of presenting a move alone.'],
-      ['Minimize personal data', 'Games and progress use no server database. Lesson completion remains in local storage on the current device.'],
+      ['Minimize personal data', 'Games and progress use no server database. Lesson completion remains in local storage on the current device, and ad-related external scripts are described in the privacy policy when enabled.'],
       ['Search-friendly content', 'Korean and English pages use separate URLs with complete HTML so users and search engines receive the same core content.']
     ],
     limitsTitle: 'Scope of the browser AI',
     limits: ['It is a learning opponent, not a tournament engine, and no exact rating is promised.', 'Advanced search depth varies by device performance and position complexity.', 'Hints work best after you first create your own candidates and explanations.'],
     privacyTitle: 'Data and privacy',
-    privacy: 'The base project has no sign-up, server database, ad SDK, or external chess API. GA can be enabled with an optional measurement ID, so a production deployment should add a privacy policy matching the analytics tools actually used.'
+    privacy: 'Game and lesson progress data is stored only in this browser’s local storage. Kakao AdFit external scripts may load to provide ads, and access, device, or cookie data may be processed for ad delivery and measurement. The live operating policy is described in the privacy policy.'
+  }
+};
+
+export const PRIVACY = {
+  ko: {
+    metaTitle: '개인정보처리방침 | ChessStep',
+    metaDescription: 'ChessStep의 로컬 저장, 광고, 분석 도구 관련 개인정보 안내입니다.',
+    title: '개인정보처리방침',
+    intro: '이 문서는 ChessStep 운영 시 확정해야 할 개인정보 처리 항목을 안내하는 초안입니다. 실제 배포 전 TODO 항목을 운영 정보에 맞게 확인해야 합니다.',
+    sections: [
+      {
+        id: 'operator',
+        title: '1. 운영자와 문의',
+        paragraphs: [
+          'TODO: 운영자명 또는 사업자명, 책임자명, 연락 가능한 이메일 주소를 실제 운영 정보에 맞게 확정합니다.',
+          '개인정보 관련 문의와 요청은 확정된 문의 수단으로 접수하고 처리 절차를 별도로 안내합니다.'
+        ]
+      },
+      {
+        id: 'items',
+        title: '2. 처리하는 항목',
+        paragraphs: [
+          'ChessStep은 회원가입을 요구하지 않으며 대국 기록, 레슨 완료 상태, 선택한 난이도와 진영 설정을 서버 데이터베이스로 전송하지 않습니다. 이러한 정보는 현재 브라우저의 로컬 저장소에만 보관됩니다.',
+          '광고가 활성화된 대국 페이지에서는 Kakao AdFit 외부 스크립트가 로드될 수 있습니다. 이 과정에서 광고 제공, 부정 이용 방지, 성과 측정을 위해 접속 정보, 기기 정보, 브라우저 정보, 쿠키 또는 광고 식별 관련 정보가 처리될 수 있습니다.',
+          'TODO: Google Analytics 등 분석 도구를 실제로 사용하는 경우 측정 ID, 수집 항목, 익명화 설정, 보유 기간을 운영 설정에 맞게 명시합니다.'
+        ]
+      },
+      {
+        id: 'purpose',
+        title: '3. 처리 목적',
+        paragraphs: [
+          '로컬 저장 데이터는 레슨 완료 상태와 대국 설정을 같은 브라우저에서 다시 사용할 수 있도록 하기 위해 사용됩니다.',
+          'Kakao AdFit 관련 정보는 광고 제공, 광고 노출 및 성과 측정, 서비스 악용 방지를 위해 처리될 수 있습니다.',
+          'TODO: 실제 운영자가 추가로 사용하는 문의, 통계, 장애 분석 목적이 있다면 별도로 구체화합니다.'
+        ]
+      },
+      {
+        id: 'retention',
+        title: '4. 보유 기간',
+        paragraphs: [
+          '브라우저 로컬 저장소에 저장된 레슨 완료 상태와 대국 설정은 사용자가 브라우저 데이터를 삭제하거나 사이트 데이터 삭제 기능을 사용할 때까지 해당 기기에 남을 수 있습니다.',
+          '광고 및 분석 제공자가 처리하는 정보의 보유 기간은 각 제공자의 정책과 운영자가 설정한 보존 기간에 따릅니다.',
+          'TODO: 운영자가 별도로 보관하는 문의 내역, 로그, 분석 데이터가 있다면 항목별 보유 기간을 확정합니다.'
+        ]
+      },
+      {
+        id: 'third-parties',
+        title: '5. 제3자 제공 및 처리위탁',
+        paragraphs: [
+          '광고가 활성화된 경우 Kakao AdFit 서비스 제공 과정에서 카카오 관련 도메인으로 외부 요청이 발생할 수 있습니다.',
+          'TODO: 실제 운영 기준으로 제3자 제공 또는 처리위탁 여부, 수탁자, 위탁 업무, 국외 이전 여부를 확인해 확정합니다.'
+        ]
+      },
+      {
+        id: 'cookies',
+        title: '6. 쿠키와 선택권',
+        paragraphs: [
+          '광고와 분석 도구는 쿠키 또는 유사 기술을 사용할 수 있습니다. 사용자는 브라우저 설정에서 쿠키를 제한하거나 삭제할 수 있으나 일부 광고 또는 통계 기능이 달라질 수 있습니다.',
+          'TODO: 적용 대상 지역의 동의 배너, 거부 절차, 쿠키 목록이 필요한지 검토합니다.'
+        ]
+      }
+    ]
+  },
+  en: {
+    metaTitle: 'Privacy Policy | ChessStep',
+    metaDescription: 'Privacy notes for local storage, ads, and analytics on ChessStep.',
+    title: 'Privacy Policy',
+    intro: 'This page is a draft privacy notice for the information ChessStep must confirm before live operation. Review each TODO against the actual operator and deployment settings.',
+    sections: [
+      {
+        id: 'operator',
+        title: '1. Operator and contact',
+        paragraphs: [
+          'TODO: Confirm the operator or business name, responsible person, and reachable email address for the live service.',
+          'Privacy inquiries and requests should be handled through the confirmed contact channel with a clear response process.'
+        ]
+      },
+      {
+        id: 'items',
+        title: '2. Data processed',
+        paragraphs: [
+          'ChessStep does not require an account and does not send game records, lesson completion, selected level, or side settings to a server database. These values are stored only in the current browser’s local storage.',
+          'When ads are enabled on the play page, the Kakao AdFit external script may load. During ad delivery, fraud prevention, and measurement, access data, device data, browser data, cookies, or ad identifier-related data may be processed.',
+          'TODO: If Google Analytics or another analytics tool is used, document the measurement ID, collected data, anonymization settings, and retention period according to the live configuration.'
+        ]
+      },
+      {
+        id: 'purpose',
+        title: '3. Purpose of processing',
+        paragraphs: [
+          'Local storage data is used to keep lesson completion and play settings available in the same browser.',
+          'Kakao AdFit-related data may be processed for ad delivery, impression and performance measurement, and abuse prevention.',
+          'TODO: Add any operator-specific contact, statistics, or diagnostics purposes used in production.'
+        ]
+      },
+      {
+        id: 'retention',
+        title: '4. Retention',
+        paragraphs: [
+          'Lesson completion and play settings in browser local storage may remain on the device until the user clears browser or site data.',
+          'Retention for ad and analytics provider data follows each provider’s policy and the retention settings chosen by the operator.',
+          'TODO: Confirm retention periods for any inquiry records, logs, or analytics data separately stored by the operator.'
+        ]
+      },
+      {
+        id: 'third-parties',
+        title: '5. Third parties and processors',
+        paragraphs: [
+          'When ads are enabled, Kakao AdFit may cause external requests to Kakao-related domains during ad service delivery.',
+          'TODO: Confirm whether third-party sharing, processing delegation, processors, delegated tasks, or cross-border transfers apply under the live operating setup.'
+        ]
+      },
+      {
+        id: 'cookies',
+        title: '6. Cookies and choices',
+        paragraphs: [
+          'Advertising and analytics tools may use cookies or similar technologies. Users can restrict or delete cookies in browser settings, although some ad or analytics behavior may change.',
+          'TODO: Review whether the target operating region requires a consent banner, opt-out flow, or cookie list.'
+        ]
+      }
+    ]
   }
 };
