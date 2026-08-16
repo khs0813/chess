@@ -1,7 +1,7 @@
 export const SITE = Object.freeze({
   name: 'ChessStep',
   legalName: 'ChessStep',
-  defaultUrl: 'https://chessstep-static.onrender.com',
+  defaultUrl: 'https://www.gameonchess.com',
   foundingYear: 2026,
   themeColor: '#184b35',
   locale: {
