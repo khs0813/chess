@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: chessstep-static
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: SITE_URL
+        value: https://chessstep-static.onrender.com
+      - key: GOOGLE_SITE_VERIFICATION
+        sync: false
+      - key: NAVER_SITE_VERIFICATION
+        sync: false
+      - key: GA_MEASUREMENT_ID
+        sync: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /favicon.svg
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /rss.xml
+        name: Content-Type
+        value: application/rss+xml; charset=utf-8
+    routes:
+      - type: redirect
+        source: /ko
+        destination: /
+      - type: redirect
+        source: /ko/*
+        destination: /*

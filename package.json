@@ -1,0 +1,26 @@
+{
+  "name": "chessstep-static",
+  "version": "1.0.0",
+  "description": "Bilingual static chess course and play-vs-computer website for Render",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev-server.mjs",
+    "preview": "node scripts/dev-server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "seo:check": "node scripts/seo-check.mjs",
+    "check": "npm run test && npm run build && npm run seo:check"
+  },
+  "keywords": [
+    "chess",
+    "chess computer",
+    "chess course",
+    "static site",
+    "render"
+  ],
+  "license": "MIT"
+}
