@@ -50,7 +50,7 @@ export const HOME = {
       ['정말 무료인가요?', '네. 대국, 힌트, 되돌리기, 모든 학습 코스를 무료로 사용할 수 있습니다. 별도의 계정이나 결제 정보가 필요하지 않습니다.'],
       ['휴대폰에서도 체스를 둘 수 있나요?', '안드로이드와 아이폰의 최신 브라우저에서 기물을 끌어 이동할 수 있도록 반응형으로 만들었습니다. 탭 선택 방식도 보조로 동작합니다.'],
       ['고급 컴퓨터는 어느 정도 강한가요?', '브라우저에서 제한된 시간 동안 여러 수를 탐색하는 학습용 AI입니다. 전용 체스 엔진이나 대회 수준의 강도를 목표로 하기보다 초·중급자의 연습 상대에 초점을 둡니다.'],
-      ['학습 기록은 어디에 저장되나요?', '레슨 완료 상태와 선택한 난이도는 현재 브라우저의 로컬 저장소에만 보관됩니다. 서버나 데이터베이스로 전송하지 않습니다. 광고가 활성화된 대국 페이지에서는 Kakao AdFit 제공을 위한 외부 요청이 발생할 수 있습니다.']
+      ['학습 기록은 어디에 저장되나요?', '대국 기록과 레슨 진행 상태는 서버 데이터베이스로 전송하지 않습니다. 광고가 활성화된 홈·대국·학습·가이드 페이지에서는 Kakao AdFit 제공을 위한 외부 요청이 발생할 수 있습니다.']
     ]
   },
   en: {
@@ -75,7 +75,7 @@ export const HOME = {
       ['Is everything really free?', 'Yes. Games, hints, takebacks, and all courses are free. No account or payment information is required.'],
       ['Can I play on a phone?', 'Yes. The board is responsive and supports drag-to-move play in modern Android and iPhone browsers, with tap selection as a fallback.'],
       ['How strong is the advanced computer?', 'It is a learning-oriented browser AI that searches several plies within a time limit. It is designed as a practical opponent for beginner and intermediate players, not as a tournament engine.'],
-      ['Where is my course progress stored?', 'Lesson completion and your selected settings stay in this browser’s local storage. They are not sent to a server or database. When ads are enabled on the play page, Kakao AdFit may make external requests to provide ads.']
+      ['Where is my course progress stored?', 'Game records and lesson progress are not sent to a server database. On home, play, course, and guide pages where ads are enabled, Kakao AdFit may make external requests to provide ads.']
     ]
   }
 };

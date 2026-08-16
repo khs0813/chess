@@ -1,5 +1,16 @@
 const SDK_SRC = 'https://t1.kakaocdn.net/kas/static/ba.min.js';
 
+const UNIT_DATASET_KEYS = {
+  landingDesktop: 'adfitLandingDesktopUnit',
+  landingMobile: 'adfitLandingMobileUnit',
+  contentDesktop: 'adfitContentDesktopUnit',
+  contentTablet: 'adfitContentTabletUnit',
+  contentMobile: 'adfitContentMobileUnit',
+  playDesktop: 'adfitPlayDesktopUnit',
+  playTablet: 'adfitPlayTabletUnit',
+  playMobile: 'adfitPlayMobileUnit'
+};
+
 let mounted = false;
 
 function isDevelopmentHost() {
@@ -11,39 +22,48 @@ function warn(message) {
   if (isDevelopmentHost()) console.warn(`[AdFit] ${message}`);
 }
 
-function unit(root, key) {
+function data(root, key) {
   return (root.dataset[key] || '').trim();
 }
 
-function choosePlacement(root) {
-  const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
-  const units = {
-    desktop: unit(root, 'adfitDesktopUnit'),
-    tablet: unit(root, 'adfitTabletUnit'),
-    mobile: unit(root, 'adfitMobileUnit')
-  };
+function viewportWidth() {
+  return window.innerWidth || document.documentElement.clientWidth || 0;
+}
 
-  if (viewportWidth >= 1240) {
-    if (units.desktop) return { host: 'rail', modifier: 'rail', unit: units.desktop, width: 160, height: 600 };
-    if (units.tablet) return { host: 'inline', modifier: 'inline', unit: units.tablet, width: 728, height: 90 };
-    if (units.mobile) return { host: 'inline', modifier: 'inline', unit: units.mobile, width: 320, height: 50 };
-    return null;
+function selectPlacement(group, width) {
+  if (group === 'landing') {
+    return width >= 760
+      ? { unitKey: 'landingDesktop', width: 728, height: 90, host: 'inline' }
+      : { unitKey: 'landingMobile', width: 320, height: 100, host: 'inline' };
   }
 
-  if (viewportWidth >= 760) {
-    if (units.tablet) return { host: 'inline', modifier: 'inline', unit: units.tablet, width: 728, height: 90 };
-    if (units.mobile) return { host: 'inline', modifier: 'inline', unit: units.mobile, width: 320, height: 50 };
-    return null;
+  if (group === 'play') {
+    if (width >= 1240) {
+      return { unitKey: 'playDesktop', width: 160, height: 600, host: 'rail' };
+    }
+    if (width >= 760) {
+      return { unitKey: 'playTablet', width: 728, height: 90, host: 'inline' };
+    }
+    return { unitKey: 'playMobile', width: 320, height: 50, host: 'inline' };
   }
 
-  if (units.mobile) return { host: 'inline', modifier: 'inline', unit: units.mobile, width: 320, height: 50 };
+  if (group === 'content') {
+    if (width >= 1120) {
+      return { unitKey: 'contentDesktop', width: 300, height: 250, host: 'rail' };
+    }
+    if (width >= 760) {
+      return { unitKey: 'contentTablet', width: 728, height: 90, host: 'inline' };
+    }
+    return { unitKey: 'contentMobile', width: 320, height: 100, host: 'inline' };
+  }
+
   return null;
 }
 
-function createSlot({ modifier, unit: adUnit, width, height }, label, sticky) {
+function createSlot({ host, unit, width, height }, label, sticky) {
   const slot = document.createElement('aside');
-  slot.className = `adfit-slot adfit-slot--${modifier}`;
-  if (modifier === 'rail' && sticky) slot.classList.add('is-sticky');
+  slot.className = `adfit-slot adfit-slot--${host}`;
+  if (host === 'rail' && sticky) slot.classList.add('is-sticky');
   slot.setAttribute('aria-label', label);
 
   const labelElement = document.createElement('span');
@@ -59,9 +79,10 @@ function createSlot({ modifier, unit: adUnit, width, height }, label, sticky) {
   ins.className = 'kakao_ad_area';
   ins.style.display = 'none';
   ins.style.width = '100%';
-  ins.dataset.adUnit = adUnit;
+  ins.dataset.adUnit = unit;
   ins.dataset.adWidth = String(width);
   ins.dataset.adHeight = String(height);
+  ins.dataset.adOnfail = 'gameOnChessAdfitNoAd';
 
   frame.append(ins);
   slot.append(labelElement, frame);
@@ -69,41 +90,63 @@ function createSlot({ modifier, unit: adUnit, width, height }, label, sticky) {
 }
 
 function loadSdk() {
-  if (window.__ChessStepAdfitSdkLoaded || document.querySelector(`script[src="${SDK_SRC}"]`)) return;
-  window.__ChessStepAdfitSdkLoaded = true;
+  if (window.__GameOnChessAdfitSdkLoaded || document.querySelector(`script[src="${SDK_SRC}"]`)) return;
+  window.__GameOnChessAdfitSdkLoaded = true;
 
   const sdk = document.createElement('script');
   sdk.async = true;
   sdk.type = 'text/javascript';
+  sdk.charset = 'utf-8';
   sdk.src = SDK_SRC;
   document.body.append(sdk);
 }
 
+window.gameOnChessAdfitNoAd = function gameOnChessAdfitNoAd(ins) {
+  const slot = ins?.closest?.('.adfit-slot');
+  if (!slot) return;
+  slot.dataset.adfitState = 'no-ad';
+  const label = slot.querySelector('.adfit-label');
+  if (label) label.hidden = true;
+};
+
 function mountAdfit() {
-  if (mounted || window.__ChessStepAdfitMounted) return;
+  if (mounted || window.__GameOnChessAdfitMounted) return;
 
   try {
-    const root = document.querySelector('[data-adfit-play="true"]');
-    if (!root || root.dataset.adfitMounted === 'true') return;
-
-    const placement = choosePlacement(root);
-    if (!placement) {
-      warn('No safe ad unit configured for this viewport.');
+    if (document.querySelector('.kakao_ad_area')) {
+      mounted = true;
+      window.__GameOnChessAdfitMounted = true;
       return;
     }
 
-    const host = root.querySelector(`[data-adfit-host="${placement.host}"]`);
+    const root = document.querySelector('[data-adfit-root]');
+    if (!root || root.dataset.adfitMounted === 'true') return;
+
+    const group = data(root, 'adfitPageGroup');
+    if (!group || group === 'excluded') return;
+
+    const placement = selectPlacement(group, viewportWidth());
+    if (!placement) return;
+
+    const unitKey = UNIT_DATASET_KEYS[placement.unitKey];
+    const adUnit = unitKey ? data(root, unitKey) : '';
+    if (!adUnit) {
+      warn('No AdFit unit configured for the selected placement.');
+      return;
+    }
+
+    const host = document.querySelector(`[data-adfit-host="${placement.host}"]`);
     if (!host || host.dataset.adfitMounted === 'true') return;
 
-    const label = unit(root, 'adfitLabel') || 'Advertisement';
-    const sticky = unit(root, 'adfitDesktopSticky') === 'true';
-    const slot = createSlot(placement, label, sticky);
+    const label = data(root, 'adfitLabel') || 'Advertisement';
+    const sticky = data(root, 'adfitPlayDesktopSticky') === 'true';
+    const slot = createSlot({ ...placement, unit: adUnit }, label, sticky);
 
     root.dataset.adfitMounted = 'true';
     host.dataset.adfitMounted = 'true';
     host.replaceChildren(slot);
     mounted = true;
-    window.__ChessStepAdfitMounted = true;
+    window.__GameOnChessAdfitMounted = true;
     loadSdk();
   } catch (error) {
     warn(error instanceof Error ? error.message : 'AdFit mount failed.');

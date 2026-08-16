@@ -277,7 +277,7 @@ export const PRIVACY = {
         title: '2. 처리하는 항목',
         paragraphs: [
           'ChessStep은 회원가입을 요구하지 않으며 대국 기록, 레슨 완료 상태, 선택한 난이도와 진영 설정을 서버 데이터베이스로 전송하지 않습니다. 이러한 정보는 현재 브라우저의 로컬 저장소에만 보관됩니다.',
-          '광고가 활성화된 대국 페이지에서는 Kakao AdFit 외부 스크립트가 로드될 수 있습니다. 이 과정에서 광고 제공, 부정 이용 방지, 성과 측정을 위해 접속 정보, 기기 정보, 브라우저 정보, 쿠키 또는 광고 식별 관련 정보가 처리될 수 있습니다.',
+          '광고가 활성화된 홈, 컴퓨터 대국, 학습 코스, 세부 레슨, 체스 가이드 및 소개 페이지에서는 Kakao AdFit 외부 스크립트가 로드될 수 있습니다. 이 과정에서 광고 제공, 부정 이용 방지, 성과 측정을 위해 접속 정보, 기기 정보, 브라우저 정보, 쿠키 또는 광고 식별 관련 정보가 처리될 수 있습니다.',
           'TODO: Google Analytics 등 분석 도구를 실제로 사용하는 경우 측정 ID, 수집 항목, 익명화 설정, 보유 기간을 운영 설정에 맞게 명시합니다.'
         ]
       },
@@ -336,7 +336,7 @@ export const PRIVACY = {
         title: '2. Data processed',
         paragraphs: [
           'ChessStep does not require an account and does not send game records, lesson completion, selected level, or side settings to a server database. These values are stored only in the current browser’s local storage.',
-          'When ads are enabled on the play page, the Kakao AdFit external script may load. During ad delivery, fraud prevention, and measurement, access data, device data, browser data, cookies, or ad identifier-related data may be processed.',
+          'When ads are enabled on home, play, course, detailed lesson, chess guide, and about pages, the Kakao AdFit external script may load. During ad delivery, fraud prevention, and measurement, access data, device data, browser data, cookies, or ad identifier-related data may be processed.',
           'TODO: If Google Analytics or another analytics tool is used, document the measurement ID, collected data, anonymization settings, and retention period according to the live configuration.'
         ]
       },
