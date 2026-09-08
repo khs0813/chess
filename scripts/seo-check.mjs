@@ -28,6 +28,7 @@ await loadEnvFile('.env.local');
 
 const siteUrl = (process.env.SITE_URL || 'https://www.gameonchess.com').replace(/\/+$/, '');
 const siteOrigin = new URL(siteUrl).origin;
+const googleAdsenseAccount = (process.env.GOOGLE_ADSENSE_ACCOUNT || 'ca-pub-7766989656523085').trim();
 
 function envBool(name, fallback = false) {
   const raw = process.env[name];
@@ -162,6 +163,9 @@ for (const file of pageFiles) {
   }
   if (!/<script\s+type="application\/ld\+json">[\s\S]+?<\/script>/i.test(html)) failures.push(`${label}: JSON-LD missing`);
   if (!/<meta\s+property="og:title"/i.test(html)) failures.push(`${label}: Open Graph metadata missing`);
+  if (googleAdsenseAccount && !html.includes(`<meta name="google-adsense-account" content="${googleAdsenseAccount}">`)) {
+    failures.push(`${label}: google-adsense-account meta tag missing or invalid`);
+  }
   if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(html)) failures.push(`${label}: AdFit <ins> must be created only at runtime`);
   if (/https:\/\/t1\.kakaocdn\.net\/kas\/static\/ba\.min\.js/.test(html)) failures.push(`${label}: Kakao AdFit SDK must be loaded only by assets/adfit.js`);
 

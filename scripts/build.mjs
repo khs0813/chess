@@ -37,6 +37,7 @@ await loadEnvFile('.env.local');
 const siteUrl = (process.env.SITE_URL || SITE.defaultUrl).replace(/\/+$/, '');
 const googleVerification = (process.env.GOOGLE_SITE_VERIFICATION || '').trim();
 const naverVerification = (process.env.NAVER_SITE_VERIFICATION || '').trim();
+const googleAdsenseAccount = (process.env.GOOGLE_ADSENSE_ACCOUNT || 'ca-pub-7766989656523085').trim();
 const gaMeasurementId = (process.env.GA_MEASUREMENT_ID || '').trim();
 
 function envBool(name, fallback = false) {
@@ -290,7 +291,8 @@ function head({ lang, pageKey, title, description, breadcrumbItems, extraSchema 
   const graph = baseGraph({ lang, pageKey, title, description, breadcrumbItems, extra: extraSchema });
   const verificationTags = [
     googleVerification ? `<meta name="google-site-verification" content="${esc(googleVerification)}">` : '',
-    naverVerification ? `<meta name="naver-site-verification" content="${esc(naverVerification)}">` : ''
+    naverVerification ? `<meta name="naver-site-verification" content="${esc(naverVerification)}">` : '',
+    googleAdsenseAccount ? `<meta name="google-adsense-account" content="${esc(googleAdsenseAccount)}">` : ''
   ].filter(Boolean).join('\n    ');
   const analytics = gaMeasurementId ? `
     <script async src="https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaMeasurementId)}"></script>

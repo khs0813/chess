@@ -14,6 +14,8 @@ services:
         sync: false
       - key: GA_MEASUREMENT_ID
         sync: false
+      - key: GOOGLE_ADSENSE_ACCOUNT
+        value: "ca-pub-7766989656523085"
       - key: ADFIT_ENABLED
         value: "false"
       - key: ADFIT_ENABLE_KO
