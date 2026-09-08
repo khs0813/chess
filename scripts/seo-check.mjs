@@ -222,12 +222,21 @@ const requiredFiles = [
   'favicon.svg', 'og-default.png', 'assets/styles.css', 'assets/adfit.js', 'assets/chess-engine.js',
   'assets/chess-ai.js', 'assets/chess-worker.js', 'assets/game.js', 'assets/site.js'
 ];
+if (googleAdsenseAccount) requiredFiles.push('ads.txt');
 for (const relative of requiredFiles) {
   try {
     const info = await stat(path.join(dist, relative));
     if (!info.isFile()) failures.push(`${relative}: not a file`);
   } catch {
     failures.push(`${relative}: required output missing`);
+  }
+}
+
+if (googleAdsenseAccount) {
+  const pubId = googleAdsenseAccount.replace(/^ca-/, '');
+  const adsTxt = await readFile(path.join(dist, 'ads.txt'), 'utf8').catch(() => '');
+  if (!adsTxt.includes(`google.com, ${pubId}, DIRECT, f08c47fec0942fa0`)) {
+    failures.push('ads.txt: Google AdSense entry missing or invalid');
   }
 }
 

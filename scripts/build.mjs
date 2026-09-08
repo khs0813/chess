@@ -724,6 +724,10 @@ async function build() {
 
   await writeFile(path.join(dist, '404.html'), render404(), 'utf8');
   await writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`, 'utf8');
+  if (googleAdsenseAccount) {
+    const pubId = googleAdsenseAccount.replace(/^ca-/, '');
+    await writeFile(path.join(dist, 'ads.txt'), `google.com, ${pubId}, DIRECT, f08c47fec0942fa0\n`, 'utf8');
+  }
 
   const sitemapEntries = Object.keys(pageBuilders).map((key) => {
     const ko = absolute(route(key, 'ko'));
