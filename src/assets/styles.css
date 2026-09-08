@@ -51,7 +51,7 @@ body {
     radial-gradient(circle at 100% 18%, rgba(24, 75, 53, 0.09), transparent 32rem),
     var(--paper);
   color: var(--ink);
-  font-family: Inter, Pretendard, "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Inter Variable", Inter, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   font-size: 16px;
   line-height: 1.7;
   overflow-wrap: break-word;
@@ -110,9 +110,10 @@ h3,
 h4 {
   margin: 0 0 0.55em;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", "Noto Serif KR", serif;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Inter Variable", Inter, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
 }
 
 h1 {
@@ -464,7 +465,7 @@ main {
   min-width: 0;
   min-height: 0;
   place-items: center;
-  font-family: "Arial Unicode MS", "Noto Sans Symbols 2", serif;
+  font-family: "Apple Symbols", "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", "Arial Unicode MS", system-ui, sans-serif;
   line-height: 1;
 }
 
@@ -473,7 +474,7 @@ main {
 }
 
 .diagram-square {
-  font-size: clamp(1.05rem, 4.4vw, 2.18rem);
+  font-size: clamp(1.25rem, 5.2vw, 2.85rem);
 }
 
 @supports (font-size: 1cqi) {
@@ -482,7 +483,7 @@ main {
   }
 
   .diagram-square {
-    font-size: min(9.1cqi, 2.18rem);
+    font-size: min(9.2cqi, 2.85rem);
   }
 }
 
@@ -496,32 +497,66 @@ main {
   background: var(--board-dark);
 }
 
+.chess-svg-piece {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  overflow: visible;
+}
+
 .mini-board-square .white-piece,
 .mini-board-square .black-piece,
 .diagram-square .white-piece,
-.diagram-square .black-piece {
+.diagram-square .black-piece,
+.diagram-piece {
   display: grid;
-  width: 100%;
-  height: 100%;
+  width: 84%;
+  height: 84%;
   place-items: center;
-  line-height: 0.86;
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(18, 28, 22, 0.16));
 }
 
-.mini-board-square .white-piece,
-.diagram-square .white-piece {
-  color: #fffaf0;
-  filter:
-    drop-shadow(0 1px 1px rgba(25, 25, 18, 0.58))
-    drop-shadow(0 3px 3px rgba(25, 25, 18, 0.16));
+.diagram-coord {
+  position: absolute;
+  z-index: 3;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, Inter, "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(0.55rem, 1.4vw, 0.82rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  user-select: none;
 }
 
-.mini-board-square .black-piece,
-.diagram-square .black-piece {
-  color: #1b211b;
-  filter:
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28))
-    drop-shadow(0 3px 3px rgba(0, 0, 0, 0.14));
+@supports (font-size: 1cqi) {
+  .diagram-coord {
+    font-size: min(3.3cqi, 0.82rem);
+  }
 }
+
+.diagram-square.light .diagram-coord {
+  color: rgba(36, 66, 52, 0.76);
+}
+
+.diagram-square.dark .diagram-coord {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.diagram-coord.coord-rank {
+  top: 2px;
+  left: 3px;
+}
+
+.diagram-coord.coord-file {
+  right: 3px;
+  bottom: 2px;
+}
+
 
 .hero-proof {
   display: grid;
@@ -540,8 +575,11 @@ main {
 .hero-proof strong {
   display: block;
   color: var(--brand);
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-proof span {
@@ -725,8 +763,11 @@ main {
 .stat strong {
   display: block;
   color: inherit;
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .stat span {
@@ -899,9 +940,10 @@ main {
   border-radius: 13px;
   background: var(--brand);
   color: #fff;
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .lesson-head h3 {
@@ -974,19 +1016,19 @@ main {
 .diagram-wrap {
   display: grid;
   align-items: center;
-  gap: clamp(1rem, 2.3vw, 1.45rem);
-  margin: 0.2rem 0;
-  grid-template-columns: minmax(220px, 330px) minmax(0, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 1.8rem);
+  margin: 0.5rem 0;
+  grid-template-columns: minmax(260px, 430px) minmax(0, 1fr);
 }
 
 .diagram-board {
-  max-width: 330px;
+  max-width: 430px;
 }
 
 .diagram-caption {
   color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.65;
+  font-size: 0.96rem;
+  line-height: 1.7;
 }
 
 .callout {
@@ -1334,21 +1376,12 @@ tr:last-child td {
   position: relative;
   z-index: 3;
   display: grid;
-  width: 100%;
-  height: 100%;
+  width: 84%;
+  height: 84%;
   place-items: center;
   overflow: visible;
-  transform: none;
-  font-family: "Arial Unicode MS", "Noto Sans Symbols 2", "Segoe UI Symbol", serif;
-  font-size: clamp(1.65rem, 6vw, 4.1rem);
-  line-height: 0.86;
   pointer-events: none;
-}
-
-@supports (font-size: 1cqi) {
-  .chess-square .piece {
-    font-size: min(8.8cqi, 4.1rem);
-  }
+  filter: drop-shadow(0 2px 3px rgba(18, 28, 22, 0.16));
 }
 
 .chess-square.is-drag-origin .piece {
@@ -1360,32 +1393,27 @@ tr:last-child td {
   z-index: 2000;
   display: grid;
   place-items: center;
-  line-height: 0.86;
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: translate(-50%, -50%) scale(1.08);
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.32));
+  pointer-events: none;
   will-change: left, top;
 }
 
-.piece-w {
-  color: #fffaf0;
-  filter:
-    drop-shadow(0 2px 1px rgba(25, 25, 18, 0.68))
-    drop-shadow(0 5px 5px rgba(25, 25, 18, 0.2));
-}
-
-.piece-b {
-  color: #1b211b;
-  filter:
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.3))
-    drop-shadow(0 4px 4px rgba(0, 0, 0, 0.18));
+.drag-piece .chess-svg-piece {
+  width: 86%;
+  height: 86%;
 }
 
 .coord {
   position: absolute;
   z-index: 5;
   color: rgba(36, 66, 52, 0.72);
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, Inter, "Segoe UI", system-ui, sans-serif;
   font-size: clamp(0.52rem, 1.4vw, 0.76rem);
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 
@@ -1396,6 +1424,11 @@ tr:last-child td {
 .coord-rank {
   top: 4px;
   left: 4px;
+}
+
+.coord-file {
+  right: 4px;
+  bottom: 4px;
 }
 
 .game-sidebar {
@@ -1484,9 +1517,30 @@ tr:last-child td {
 
 .captured-pieces {
   min-height: 1.6rem;
-  font-family: "Arial Unicode MS", "Noto Sans Symbols 2", serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.06em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+}
+
+.captured-piece-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+}
+
+.captured-piece-icon .chess-svg-piece {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18));
+}
+
+.captured-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .move-log {
@@ -1567,8 +1621,20 @@ tr:last-child td {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface-soft);
-  font-family: "Arial Unicode MS", "Noto Sans Symbols 2", serif;
-  font-size: 2.2rem;
+  padding: 0.45rem;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.promotion-options button:hover {
+  background: #ffffff;
+  transform: scale(1.05);
+}
+
+.promotion-options button .chess-svg-piece {
+  width: 82%;
+  height: 82%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .toast {
@@ -1656,10 +1722,11 @@ tr:last-child td {
 .not-found-mark {
   margin-bottom: 0.4rem;
   color: var(--brand);
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: clamp(5rem, 18vw, 10rem);
-  font-weight: 800;
+  font-weight: 900;
   line-height: .9;
+  letter-spacing: -0.05em;
 }
 
 @media (min-width: 1120px) {
@@ -1916,7 +1983,7 @@ tr:last-child td {
   }
 
   .diagram-board {
-    width: min(100%, 330px);
+    width: min(100%, 430px);
     margin-inline: auto;
   }
 

@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { Chess, PIECE_SYMBOLS, colorOf } from '../src/assets/chess-engine.js';
+import { Chess, PIECE_SYMBOLS, PIECE_SVGS, colorOf } from '../src/assets/chess-engine.js';
 import { SITE, ROUTES, route } from '../src/content/site.mjs';
 import { UI, HOME, COURSE_SUMMARIES } from '../src/content/content.mjs';
 import { COURSES } from '../src/content/courses.mjs';
@@ -412,9 +412,13 @@ function renderBreadcrumbs(items, lang) {
 function renderBoard(fen, label = 'Chess position', compact = false) {
   const game = new Chess(fen);
   return `<div class="${compact ? 'mini-board' : 'diagram-board'}" role="img" aria-label="${esc(label)}">${game.board.map((piece, index) => {
-    const squareClass = (Math.floor(index / 8) + index % 8) % 2 === 0 ? 'light' : 'dark';
-    const pieceHtml = piece ? `<span class="${colorOf(piece) === 'w' ? 'white-piece' : 'black-piece'}" aria-hidden="true">${PIECE_SYMBOLS[piece]}</span>` : '';
-    return `<span class="${compact ? 'mini-board-square' : 'diagram-square'} ${squareClass}">${pieceHtml}</span>`;
+    const row = Math.floor(index / 8);
+    const col = index % 8;
+    const squareClass = (row + col) % 2 === 0 ? 'light' : 'dark';
+    const rankCoord = (!compact && col === 0) ? `<span class="diagram-coord coord-rank" aria-hidden="true">${8 - row}</span>` : '';
+    const fileCoord = (!compact && row === 7) ? `<span class="diagram-coord coord-file" aria-hidden="true">${String.fromCharCode(97 + col)}</span>` : '';
+    const pieceHtml = piece ? `<span class="diagram-piece ${colorOf(piece) === 'w' ? 'white-piece' : 'black-piece'}" aria-hidden="true">${PIECE_SVGS[piece]}</span>` : '';
+    return `<span class="${compact ? 'mini-board-square' : 'diagram-square'} ${squareClass}">${rankCoord}${fileCoord}${pieceHtml}</span>`;
   }).join('')}</div>`;
 }
 
@@ -485,7 +489,7 @@ function gameApp(lang) {
       <div class="game-card"><h2>${ko ? '잡은 기물' : 'Captured pieces'}</h2><div class="captured-grid"><div><small>${ko ? '내가 잡음' : 'Captured by you'}</small><div class="captured-pieces" data-captured-white>—</div></div><div><small>${ko ? '컴퓨터가 잡음' : 'Captured by computer'}</small><div class="captured-pieces" data-captured-black>—</div></div></div></div>
       <div class="game-card move-log"><h2>${ko ? '수 목록' : 'Move list'}</h2><div data-move-list></div></div>
     </aside>
-    <dialog class="promotion-dialog" data-promotion-dialog><h2>${ko ? '승격 기물 선택' : 'Choose promotion'}</h2><div class="promotion-options"><button type="button" data-promotion="q" aria-label="${esc(promotion.q)}">♕</button><button type="button" data-promotion="r" aria-label="${esc(promotion.r)}">♖</button><button type="button" data-promotion="b" aria-label="${esc(promotion.b)}">♗</button><button type="button" data-promotion="n" aria-label="${esc(promotion.n)}">♘</button></div></dialog>
+    <dialog class="promotion-dialog" data-promotion-dialog><h2>${ko ? '승격 기물 선택' : 'Choose promotion'}</h2><div class="promotion-options"><button type="button" data-promotion="q" aria-label="${esc(promotion.q)}">${PIECE_SVGS.Q}</button><button type="button" data-promotion="r" aria-label="${esc(promotion.r)}">${PIECE_SVGS.R}</button><button type="button" data-promotion="b" aria-label="${esc(promotion.b)}">${PIECE_SVGS.B}</button><button type="button" data-promotion="n" aria-label="${esc(promotion.n)}">${PIECE_SVGS.N}</button></div></dialog>
     <div class="toast" data-toast hidden role="status"></div>
   </div>`;
 }

@@ -12,14 +12,15 @@ export const COURSES = {
           title: '체스판 읽기와 기물 이동', duration: 15,
           summary: '좌표, 백과 흑의 방향, 폰·나이트·비숍·룩·퀸·킹의 이동을 한 번에 정리합니다.',
           paragraphs: [
-            '체스판은 가로 파일 a부터 h, 세로 랭크 1부터 8로 좌표를 표시합니다. 백 진영에서 오른쪽 아래 칸은 항상 밝은색이며, 백은 1랭크와 2랭크에서 출발합니다.',
+            '체스판은 가로 열을 ‘파일(a~h)’, 세로 행을 ‘랭크(1~8)’로 불러 64칸마다 a1, e4 같은 고유 좌표를 갖습니다. 그림을 보면 판 아래쪽에 a부터 h까지의 파일, 왼쪽에 1부터 8까지의 랭크가 표시되어 있습니다.',
+            '체스판을 놓을 때는 백 진영 기준으로 오른쪽 아래 구석 칸(h1)이 항상 밝은색이어야 합니다. 백은 1랭크(주요 기물)와 2랭크(폰)에서 출발하고, 흑은 8랭크와 7랭크에서 마주 보며 출발합니다.',
             '룩은 직선, 비숍은 대각선, 퀸은 두 움직임을 모두 사용합니다. 나이트는 다른 기물을 뛰어넘을 수 있고, 킹은 한 칸씩 이동합니다. 폰은 앞으로 이동하지만 대각선 앞으로만 잡는다는 점이 가장 자주 헷갈립니다.'
           ],
           bullets: ['기물은 자기 편 기물이 있는 칸으로 이동할 수 없습니다.', '상대 기물이 있는 칸으로 이동하면 그 기물을 잡습니다.', '킹을 체크 상태로 남기는 수는 합법적인 수가 아닙니다.'],
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-          caption: '초기 배치. 퀸은 자기 색과 같은 색 칸에서 시작합니다. 백 퀸은 d1, 흑 퀸은 d8입니다.',
+          caption: '초기 배치. 판 아래쪽의 파일(a~h)과 왼쪽의 랭크(1~8) 좌표를 확인하세요. 백 기준 오른쪽 아래 h1 칸은 밝은색이며, 퀸은 자기 색 칸(백 퀸 d1, 흑 퀸 d8)에서 시작합니다.',
           keyPoint: '기물을 움직이기 전에 출발 칸과 도착 칸의 좌표를 소리 내어 읽어 보세요.',
-          practice: '빈 체스판을 떠올리고 a1, d4, h8의 위치를 손가락으로 찾아 보세요.'
+          practice: '그림의 좌표를 보면서 a1, d4, e4, h8의 위치를 직접 손가락으로 찾아 보세요.'
         },
         {
           title: '기물 가치와 안전한 전개', duration: 15,
@@ -288,14 +289,15 @@ export const COURSES = {
           title: 'Read the board and move every piece', duration: 15,
           summary: 'Learn coordinates, board orientation, and the movement of pawns, knights, bishops, rooks, queens, and kings.',
           paragraphs: [
-            'Files run from a to h and ranks run from 1 to 8. From White’s side, the lower-right corner is always a light square, and White begins on ranks one and two.',
+            'The chessboard uses horizontal files (a through h, shown along the bottom) and vertical ranks (1 through 8, shown on the left) to give every square an exact coordinate, such as a1 or e4.',
+            'When orienting the board, the bottom-right corner from White’s perspective (h1) is always a light square. White begins on rank 1 (pieces) and rank 2 (pawns), facing Black on ranks 8 and 7.',
             'Rooks move in straight lines, bishops move diagonally, and queens combine both patterns. Knights can jump over pieces, while kings move one square. Pawns are unusual: they move forward but capture one square diagonally forward.'
           ],
           bullets: ['A piece cannot move onto a square occupied by a friendly piece.', 'Moving onto an enemy piece captures it.', 'A move that leaves your own king in check is illegal.'],
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-          caption: 'The starting position. Each queen begins on a square matching its own color: White on d1 and Black on d8.',
+          caption: 'The starting position. Note the coordinate labels: files a–h along the bottom and ranks 1–8 on the left. White’s bottom-right square (h1) is light, and queens start on their own color (White d1, Black d8).',
           keyPoint: 'Say the starting and destination coordinates aloud before moving a piece.',
-          practice: 'Picture an empty board and point to a1, d4, and h8 without counting every square.'
+          practice: 'Use the coordinate labels on the board to locate squares a1, d4, e4, and h8 with your finger.'
         },
         {
           title: 'Piece values and safe development', duration: 15,

@@ -2,6 +2,7 @@ import {
   Chess,
   PIECE_NAMES,
   PIECE_SYMBOLS,
+  PIECE_SVGS,
   colorOf,
   indexToSquare,
   squareToIndex,
@@ -198,11 +199,10 @@ if (app) {
     const squareSize = boardElement ? boardElement.clientWidth / 8 : 72;
     const ghost = document.createElement('span');
     ghost.className = `piece piece-${colorOf(dragState.piece)} drag-piece`;
-    ghost.textContent = PIECE_SYMBOLS[dragState.piece];
+    ghost.innerHTML = PIECE_SVGS[dragState.piece];
     ghost.setAttribute('aria-hidden', 'true');
     ghost.style.width = `${squareSize}px`;
     ghost.style.height = `${squareSize}px`;
-    ghost.style.fontSize = `${squareSize * 0.68}px`;
     document.body.append(ghost);
     dragState.ghost = ghost;
     updateDragGhost(event);
@@ -259,7 +259,7 @@ if (app) {
       if (piece) {
         const glyph = document.createElement('span');
         glyph.className = `piece piece-${colorOf(piece)}`;
-        glyph.textContent = PIECE_SYMBOLS[piece];
+        glyph.innerHTML = PIECE_SVGS[piece];
         glyph.setAttribute('aria-hidden', 'true');
         button.append(glyph);
       }
@@ -269,6 +269,14 @@ if (app) {
         rankLabel.textContent = square[1];
         rankLabel.setAttribute('aria-hidden', 'true');
         button.append(rankLabel);
+      }
+      const displayRow = Math.floor(displayIndex / 8);
+      if (displayRow === 7) {
+        const fileLabel = document.createElement('span');
+        fileLabel.className = 'coord coord-file';
+        fileLabel.textContent = square[0];
+        fileLabel.setAttribute('aria-hidden', 'true');
+        button.append(fileLabel);
       }
 
       button.disabled = thinking || game.turn !== humanColor || boardStatus.over;
@@ -372,8 +380,12 @@ if (app) {
     }
     const capturedByHuman = humanColor === 'w' ? capturedByWhite : capturedByBlack;
     const capturedByComputer = humanColor === 'w' ? capturedByBlack : capturedByWhite;
-    if (capturedWhiteElement) capturedWhiteElement.textContent = capturedByHuman.map((piece) => PIECE_SYMBOLS[piece]).join(' ') || '—';
-    if (capturedBlackElement) capturedBlackElement.textContent = capturedByComputer.map((piece) => PIECE_SYMBOLS[piece]).join(' ') || '—';
+    if (capturedWhiteElement) {
+      capturedWhiteElement.innerHTML = capturedByHuman.map((piece) => `<span class="captured-piece-icon">${PIECE_SVGS[piece]}</span>`).join('') || '<span class="captured-empty">—</span>';
+    }
+    if (capturedBlackElement) {
+      capturedBlackElement.innerHTML = capturedByComputer.map((piece) => `<span class="captured-piece-icon">${PIECE_SVGS[piece]}</span>`).join('') || '<span class="captured-empty">—</span>';
+    }
   }
 
   function renderControls() {
