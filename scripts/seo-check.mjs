@@ -30,53 +30,6 @@ const siteUrl = (process.env.SITE_URL || 'https://www.gameonchess.com').replace(
 const siteOrigin = new URL(siteUrl).origin;
 const googleAdsenseAccount = (process.env.GOOGLE_ADSENSE_ACCOUNT || 'ca-pub-7766989656523085').trim();
 
-function envBool(name, fallback = false) {
-  const raw = process.env[name];
-  if (raw == null || raw === '') return fallback;
-  return String(raw).trim().toLowerCase() === 'true';
-}
-
-const adfitEnabled = envBool('ADFIT_ENABLED', false);
-const adfitEnableKo = envBool('ADFIT_ENABLE_KO', true);
-const adfitEnableEn = envBool('ADFIT_ENABLE_EN', true);
-const adfitUnits = {
-  landingDesktop: (process.env.ADFIT_LANDING_DESKTOP_728X90 || '').trim(),
-  landingMobile: (process.env.ADFIT_LANDING_MOBILE_320X100 || '').trim(),
-  contentDesktop: (process.env.ADFIT_CONTENT_DESKTOP_300X250 || '').trim(),
-  contentTablet: (process.env.ADFIT_CONTENT_TABLET_728X90 || '').trim(),
-  contentMobile: (process.env.ADFIT_CONTENT_MOBILE_320X100 || '').trim(),
-  playDesktop: (process.env.ADFIT_PLAY_DESKTOP_160X600 || '').trim(),
-  playTablet: (process.env.ADFIT_PLAY_TABLET_728X90 || '').trim(),
-  playMobile: (process.env.ADFIT_PLAY_MOBILE_320X50 || '').trim()
-};
-const adfitUnitValues = [...new Set(Object.values(adfitUnits).filter(Boolean))];
-const adfitPageGroups = {
-  landing: new Set(['/', '/en/', '/learn/', '/en/learn/', '/about/', '/en/about/']),
-  play: new Set(['/play/', '/en/play/']),
-  content: new Set([
-    '/learn/beginner/',
-    '/en/learn/beginner/',
-    '/learn/intermediate/',
-    '/en/learn/intermediate/',
-    '/learn/advanced/',
-    '/en/learn/advanced/',
-    '/rules/',
-    '/en/rules/',
-    '/tactics/',
-    '/en/tactics/',
-    '/openings/',
-    '/en/openings/',
-    '/endgames/',
-    '/en/endgames/'
-  ]),
-  excluded: new Set(['/privacy/', '/en/privacy/', '/404.html'])
-};
-const monetizedRoutes = new Set([
-  ...adfitPageGroups.landing,
-  ...adfitPageGroups.play,
-  ...adfitPageGroups.content
-]);
-const adfitModulePattern = /<script\s+type="module"\s+src="\/assets\/adfit\.js"><\/script>/g;
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -115,18 +68,6 @@ function languageFromRoute(route) {
   return route.startsWith('/en/') || route === '/en/' ? 'en' : 'ko';
 }
 
-function isAdfitLanguageEnabledForRoute(route) {
-  const lang = languageFromRoute(route);
-  if (!adfitEnabled) return false;
-  return lang === 'ko' ? adfitEnableKo : adfitEnableEn;
-}
-
-function adfitGroupForRoute(route) {
-  for (const [group, routes] of Object.entries(adfitPageGroups)) {
-    if (routes.has(route)) return group;
-  }
-  return 'excluded';
-}
 
 const allFiles = await walk(dist);
 const htmlFiles = allFiles.filter((file) => file.endsWith('.html'));
@@ -166,34 +107,9 @@ for (const file of pageFiles) {
   if (googleAdsenseAccount && !html.includes(`<meta name="google-adsense-account" content="${googleAdsenseAccount}">`)) {
     failures.push(`${label}: google-adsense-account meta tag missing or invalid`);
   }
-  if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(html)) failures.push(`${label}: AdFit <ins> must be created only at runtime`);
-  if (/https:\/\/t1\.kakaocdn\.net\/kas\/static\/ba\.min\.js/.test(html)) failures.push(`${label}: Kakao AdFit SDK must be loaded only by assets/adfit.js`);
-
-  const adfitRootCount = countMatches(html, /\sdata-adfit-root(?:\s|>)/g);
-  const adfitScriptCount = countMatches(html, adfitModulePattern);
-  const inlineHostCount = countMatches(html, /data-adfit-host="inline"/g);
-  const railHostCount = countMatches(html, /data-adfit-host="rail"/g);
-  const group = adfitGroupForRoute(route);
-  const shouldHaveAdfit = monetizedRoutes.has(route) && isAdfitLanguageEnabledForRoute(route);
-
-  if (shouldHaveAdfit) {
-    if (adfitRootCount !== 1) failures.push(`${label}: expected exactly one data-adfit-root`);
-    if (adfitScriptCount !== 1) failures.push(`${label}: expected exactly one /assets/adfit.js module`);
-    if (!html.includes(`data-adfit-page-group="${group}"`)) failures.push(`${label}: AdFit page group must be ${group}`);
-    if (inlineHostCount !== 1) failures.push(`${label}: expected exactly one inline AdFit host`);
-    if (group === 'play' || group === 'content') {
-      if (railHostCount !== 1) failures.push(`${label}: expected exactly one rail AdFit host`);
-    } else if (railHostCount !== 0) {
-      failures.push(`${label}: landing pages must not include a rail AdFit host`);
-    }
-  } else {
-    if (adfitRootCount !== 0) failures.push(`${label}: AdFit root must not be emitted`);
-    if (adfitScriptCount !== 0) failures.push(`${label}: AdFit module must not be emitted`);
-    if (inlineHostCount !== 0 || railHostCount !== 0) failures.push(`${label}: AdFit hosts must not be emitted`);
+  if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(html) || /https:\/\/t1\.kakaocdn\.net\/kas\/static\/ba\.min\.js/.test(html) || /\sdata-adfit-root(?:\s|>)/.test(html)) {
+    failures.push(`${label}: Kakao AdFit code must be completely removed`);
   }
-
-  if (inlineHostCount > 1) failures.push(`${label}: at most one inline AdFit host is allowed`);
-  if (railHostCount > 1) failures.push(`${label}: at most one rail AdFit host is allowed`);
 
   const title = firstMatch(html, /<title>([^<]+)<\/title>/i);
   const description = firstMatch(html, /<meta\s+name="description"\s+content="([^"]+)"/i);
@@ -219,7 +135,7 @@ for (const file of pageFiles) {
 
 const requiredFiles = [
   'index.html', 'en/index.html', 'robots.txt', 'sitemap.xml', 'rss.xml', 'site.webmanifest',
-  'favicon.svg', 'og-default.png', 'assets/styles.css', 'assets/adfit.js', 'assets/chess-engine.js',
+  'favicon.svg', 'og-default.png', 'assets/styles.css', 'assets/chess-engine.js',
   'assets/chess-ai.js', 'assets/chess-worker.js', 'assets/game.js', 'assets/site.js'
 ];
 if (googleAdsenseAccount) requiredFiles.push('ads.txt');
@@ -263,60 +179,9 @@ if (countMatches(rss, /<item>[\s\S]*?<dc:language>ko-KR<\/dc:language>[\s\S]*?<\
 if (countMatches(rss, /<item>[\s\S]*?<dc:language>en-US<\/dc:language>[\s\S]*?<\/item>/g) !== pageFiles.length / 2) failures.push('rss.xml: en-US item language count mismatch');
 
 const notFoundHtml = await readFile(path.join(dist, '404.html'), 'utf8').catch(() => '');
-if (/\sdata-adfit-root(?:\s|>)/.test(notFoundHtml)) failures.push('404.html: AdFit root must not be emitted');
-if (adfitModulePattern.test(notFoundHtml)) failures.push('404.html: AdFit module must not be emitted');
-adfitModulePattern.lastIndex = 0;
-if (/data-adfit-host="(?:inline|rail)"/.test(notFoundHtml)) failures.push('404.html: AdFit hosts must not be emitted');
-if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(notFoundHtml)) failures.push('404.html: AdFit <ins> must be created only at runtime');
-if (/https:\/\/t1\.kakaocdn\.net\/kas\/static\/ba\.min\.js/.test(notFoundHtml)) failures.push('404.html: Kakao AdFit SDK must not be emitted');
-
-if (adfitEnabled && adfitEnableKo && adfitEnableEn) {
-  let monetizedRootCount = 0;
-  let monetizedScriptCount = 0;
-  for (const route of monetizedRoutes) {
-    const html = pageHtml.get(route) || '';
-    monetizedRootCount += countMatches(html, /\sdata-adfit-root(?:\s|>)/g);
-    monetizedScriptCount += countMatches(html, adfitModulePattern);
-  }
-  if (monetizedRootCount !== 22) failures.push(`AdFit: expected 22 monetized roots, found ${monetizedRootCount}`);
-  if (monetizedScriptCount !== 22) failures.push(`AdFit: expected 22 monetized module scripts, found ${monetizedScriptCount}`);
+if (/<ins\b[^>]*class="[^"]*\bkakao_ad_area\b/i.test(notFoundHtml) || /https:\/\/t1\.kakaocdn\.net\/kas\/static\/ba\.min\.js/.test(notFoundHtml) || /\sdata-adfit-root(?:\s|>)/.test(notFoundHtml)) {
+  failures.push('404.html: Kakao AdFit code must be completely removed');
 }
-
-const searchableFiles = allFiles.filter((file) => /\.(?:html|js|css|xml|txt|json|webmanifest|svg)$/i.test(file));
-const searchableText = (await Promise.all(searchableFiles.map((file) => readFile(file, 'utf8').catch(() => '')))).join('\n');
-if (!adfitEnabled) {
-  for (const value of adfitUnitValues) {
-    if (searchableText.includes(value)) failures.push('dist: AdFit unit ID leaked while ADFIT_ENABLED=false');
-  }
-}
-if (adfitEnabled && !adfitEnableKo) {
-  const koText = [...pageHtml.entries()]
-    .filter(([route]) => languageFromRoute(route) === 'ko')
-    .map(([, html]) => html)
-    .join('\n');
-  for (const value of adfitUnitValues) {
-    if (koText.includes(value)) failures.push('dist: AdFit unit ID leaked while ADFIT_ENABLE_KO=false');
-  }
-}
-if (adfitEnabled && !adfitEnableEn) {
-  const enText = [...pageHtml.entries()]
-    .filter(([route]) => languageFromRoute(route) === 'en')
-    .map(([, html]) => html)
-    .join('\n');
-  for (const value of adfitUnitValues) {
-    if (enText.includes(value)) failures.push('dist: AdFit unit ID leaked while ADFIT_ENABLE_EN=false');
-  }
-}
-
-const adfitAsset = await readFile(path.join(dist, 'assets/adfit.js'), 'utf8').catch(() => '');
-if (/innerHTML\s*=/.test(adfitAsset)) failures.push('assets/adfit.js: do not build ad markup with innerHTML');
-if (/addEventListener\(\s*['"](?:resize|orientationchange)['"]/.test(adfitAsset)) failures.push('assets/adfit.js: do not remount ads on resize or orientationchange');
-if (countMatches(adfitAsset, /createElement\(\s*['"]ins['"]\s*\)/g) !== 1) failures.push('assets/adfit.js: expected one runtime <ins> creation path');
-if (!/dataset\.adOnfail\s*=\s*['"]gameOnChessAdfitNoAd['"]/.test(adfitAsset)) failures.push('assets/adfit.js: AdFit no-ad callback must be declared on the <ins>');
-if (!/querySelector\(\s*['"]\.kakao_ad_area['"]\s*\)/.test(adfitAsset)) failures.push('assets/adfit.js: existing AdFit <ins> guard is required');
-if (!/querySelector\(\s*`script\[src="\$\{SDK_SRC\}"\]`\s*\)/.test(adfitAsset)) failures.push('assets/adfit.js: existing SDK script guard is required');
-if (!/document\.querySelector\(\s*['"]\[data-adfit-root\]['"]\s*\)/.test(adfitAsset)) failures.push('assets/adfit.js: expected data-adfit-root configuration lookup');
-if (/data-adfit-play/.test(adfitAsset)) failures.push('assets/adfit.js: play-only AdFit selectors must not remain');
 
 if (warnings.length) {
   console.warn(`SEO warnings (${warnings.length}):`);

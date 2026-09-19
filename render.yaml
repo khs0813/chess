@@ -16,30 +16,6 @@ services:
         sync: false
       - key: GOOGLE_ADSENSE_ACCOUNT
         value: "ca-pub-7766989656523085"
-      - key: ADFIT_ENABLED
-        value: "false"
-      - key: ADFIT_ENABLE_KO
-        value: "true"
-      - key: ADFIT_ENABLE_EN
-        value: "true"
-      - key: ADFIT_PLAY_DESKTOP_STICKY
-        value: "true"
-      - key: ADFIT_LANDING_DESKTOP_728X90
-        sync: false
-      - key: ADFIT_LANDING_MOBILE_320X100
-        sync: false
-      - key: ADFIT_CONTENT_DESKTOP_300X250
-        sync: false
-      - key: ADFIT_CONTENT_TABLET_728X90
-        sync: false
-      - key: ADFIT_CONTENT_MOBILE_320X100
-        sync: false
-      - key: ADFIT_PLAY_DESKTOP_160X600
-        sync: false
-      - key: ADFIT_PLAY_TABLET_728X90
-        sync: false
-      - key: ADFIT_PLAY_MOBILE_320X50
-        sync: false
     headers:
       - path: /*
         name: X-Content-Type-Options

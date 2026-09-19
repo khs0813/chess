@@ -16,7 +16,7 @@ export const PLAY = {
       ['대국 후 첫 실수 복기', '수 목록과 되돌리기를 이용해 처음 평가가 크게 나빠진 수를 찾아 대안을 생각합니다.']
     ],
     faq: [
-      ['컴퓨터가 오프라인에서도 동작하나요?', '첫 페이지 로딩에 필요한 파일이 브라우저에 캐시되어 있다면 일부 환경에서 다시 열 수 있지만, 완전한 오프라인 앱을 보장하지는 않습니다. 대국 계산 자체는 외부 체스 API를 사용하지 않습니다. 광고가 활성화된 페이지에서는 Kakao AdFit 스크립트 요청이 발생할 수 있습니다.'],
+      ['컴퓨터가 오프라인에서도 동작하나요?', '첫 페이지 로딩에 필요한 파일이 브라우저에 캐시되어 있다면 일부 환경에서 다시 열 수 있지만, 완전한 오프라인 앱을 보장하지는 않습니다. 대국 계산 자체는 외부 체스 API를 사용하지 않습니다.'],
       ['AI 난이도는 레이팅으로 얼마인가요?', '고정 레이팅을 제공하지 않습니다. 기기 성능과 포지션 복잡도에 따라 탐색 깊이가 달라지므로 학습 단계별 상대라고 보는 것이 정확합니다.'],
       ['대국을 저장할 수 있나요?', '현재 버전은 계정이나 서버 저장을 사용하지 않습니다. 대신 수 목록과 되돌리기 기능으로 한 판 안에서 복기할 수 있고, 전체 기보 내보내기는 확장하기 쉽도록 코드가 분리되어 있습니다.']
     ]
@@ -38,7 +38,7 @@ export const PLAY = {
       ['Review the first serious mistake', 'Use the move list and undo to locate the first move that seriously changed the position, then calculate an alternative.']
     ],
     faq: [
-      ['Does the computer work offline?', 'The chess calculation itself uses no external chess API. A previously cached page may reopen in some environments, but this version does not guarantee a fully offline app. When ads are enabled, the page may request the Kakao AdFit script.'],
+      ['Does the computer work offline?', 'The chess calculation itself uses no external chess API. A previously cached page may reopen in some environments, but this version does not guarantee a fully offline app.'],
       ['What rating is each AI level?', 'There is no fixed rating. Search depth varies with device speed and position complexity, so the levels are better understood as learning stages.'],
       ['Can I save a game?', 'This version uses no account or server storage. You can review the current game with the move list and undo, and the code is structured so PGN export can be added later.']
     ]
@@ -237,7 +237,7 @@ export const ABOUT = {
     limitsTitle: '브라우저 AI의 범위',
     limits: ['학습용 상대이며 전문 대회 엔진의 강도나 정확한 레이팅을 보장하지 않습니다.', '고급 난이도도 기기 성능과 포지션 복잡도에 따라 탐색 깊이가 달라집니다.', '추천 수는 학습 보조 수단이며 먼저 자신의 후보수와 이유를 만든 뒤 비교하는 방식이 좋습니다.'],
     privacyTitle: '데이터와 개인정보',
-    privacy: '대국과 레슨 진행 데이터는 현재 브라우저의 로컬 저장소에만 보관됩니다. 광고 제공을 위해 Kakao AdFit 외부 스크립트가 로드될 수 있으며, 광고 제공과 성과 측정 과정에서 접속·기기 정보 또는 쿠키 등이 처리될 수 있습니다. 실제 운영 정책은 개인정보처리방침에서 안내합니다.'
+    privacy: '대국과 레슨 진행 데이터는 현재 브라우저의 로컬 저장소에만 보관됩니다. 외부 제휴 배너 로드 과정에서 기본 접속 정보가 처리될 수 있으며, 실제 운영 정책은 개인정보처리방침에서 안내합니다.'
   },
   en: {
     metaTitle: 'About ChessStep | Chess Learning',
@@ -247,13 +247,13 @@ export const ABOUT = {
     principles: [
       ['Start immediately', 'The board and courses open in the browser without account creation or app installation.'],
       ['Explain the process', 'Lessons repeat candidate generation, opponent threats, and evaluation of the resulting position instead of presenting a move alone.'],
-      ['Minimize personal data', 'Games and progress use no server database. Lesson completion remains in local storage on the current device, and ad-related external scripts are described in the privacy policy when enabled.'],
+      ['Minimize personal data', 'Games and progress use no server database. Lesson completion remains in local storage on the current device, and external partner resources are described in the privacy policy when enabled.'],
       ['Search-friendly content', 'Korean and English pages use separate URLs with complete HTML so users and search engines receive the same core content.']
     ],
     limitsTitle: 'Scope of the browser AI',
     limits: ['It is a learning opponent, not a tournament engine, and no exact rating is promised.', 'Advanced search depth varies by device performance and position complexity.', 'Hints work best after you first create your own candidates and explanations.'],
     privacyTitle: 'Data and privacy',
-    privacy: 'Game and lesson progress data is stored only in this browser’s local storage. Kakao AdFit external scripts may load to provide ads, and access, device, or cookie data may be processed for ad delivery and measurement. The live operating policy is described in the privacy policy.'
+    privacy: 'Game and lesson progress data is stored only in this browser’s local storage. Basic access data may be processed when loading external affiliate resources, and the live operating policy is described in the privacy policy.'
   }
 };
 
@@ -277,7 +277,7 @@ export const PRIVACY = {
         title: '2. 처리하는 항목',
         paragraphs: [
           'ChessStep은 회원가입을 요구하지 않으며 대국 기록, 레슨 완료 상태, 선택한 난이도와 진영 설정을 서버 데이터베이스로 전송하지 않습니다. 이러한 정보는 현재 브라우저의 로컬 저장소에만 보관됩니다.',
-          '광고가 활성화된 홈, 컴퓨터 대국, 학습 코스, 세부 레슨, 체스 가이드 및 소개 페이지에서는 Kakao AdFit 외부 스크립트가 로드될 수 있습니다. 이 과정에서 광고 제공, 부정 이용 방지, 성과 측정을 위해 접속 정보, 기기 정보, 브라우저 정보, 쿠키 또는 광고 식별 관련 정보가 처리될 수 있습니다.',
+          '외부 제휴 배너가 포함된 페이지에서는 제휴 서비스 제공, 부정 이용 방지, 성과 측정을 위해 접속 정보, 기기 정보, 브라우저 정보, 쿠키 또는 식별 관련 정보가 처리될 수 있습니다.',
           'TODO: Google Analytics 등 분석 도구를 실제로 사용하는 경우 측정 ID, 수집 항목, 익명화 설정, 보유 기간을 운영 설정에 맞게 명시합니다.'
         ]
       },
@@ -286,7 +286,7 @@ export const PRIVACY = {
         title: '3. 처리 목적',
         paragraphs: [
           '로컬 저장 데이터는 레슨 완료 상태와 대국 설정을 같은 브라우저에서 다시 사용할 수 있도록 하기 위해 사용됩니다.',
-          'Kakao AdFit 관련 정보는 광고 제공, 광고 노출 및 성과 측정, 서비스 악용 방지를 위해 처리될 수 있습니다.',
+          '외부 제휴 배너 관련 정보는 광고 제공, 노출 및 성과 측정, 서비스 악용 방지를 위해 처리될 수 있습니다.',
           'TODO: 실제 운영자가 추가로 사용하는 문의, 통계, 장애 분석 목적이 있다면 별도로 구체화합니다.'
         ]
       },
@@ -303,7 +303,7 @@ export const PRIVACY = {
         id: 'third-parties',
         title: '5. 제3자 제공 및 처리위탁',
         paragraphs: [
-          '광고가 활성화된 경우 Kakao AdFit 서비스 제공 과정에서 카카오 관련 도메인으로 외부 요청이 발생할 수 있습니다.',
+          '외부 제휴 배너 제공 과정에서 해당 제휴 서비스 관련 도메인으로 외부 요청이 발생할 수 있습니다.',
           'TODO: 실제 운영 기준으로 제3자 제공 또는 처리위탁 여부, 수탁자, 위탁 업무, 국외 이전 여부를 확인해 확정합니다.'
         ]
       },
@@ -336,7 +336,7 @@ export const PRIVACY = {
         title: '2. Data processed',
         paragraphs: [
           'ChessStep does not require an account and does not send game records, lesson completion, selected level, or side settings to a server database. These values are stored only in the current browser’s local storage.',
-          'When ads are enabled on home, play, course, detailed lesson, chess guide, and about pages, the Kakao AdFit external script may load. During ad delivery, fraud prevention, and measurement, access data, device data, browser data, cookies, or ad identifier-related data may be processed.',
+          'On pages with external affiliate banners, access data, device data, browser data, cookies, or identifier-related data may be processed for service delivery, abuse prevention, and performance measurement.',
           'TODO: If Google Analytics or another analytics tool is used, document the measurement ID, collected data, anonymization settings, and retention period according to the live configuration.'
         ]
       },
@@ -345,7 +345,7 @@ export const PRIVACY = {
         title: '3. Purpose of processing',
         paragraphs: [
           'Local storage data is used to keep lesson completion and play settings available in the same browser.',
-          'Kakao AdFit-related data may be processed for ad delivery, impression and performance measurement, and abuse prevention.',
+          'Affiliate-related data may be processed for banner delivery, impression and performance measurement, and abuse prevention.',
           'TODO: Add any operator-specific contact, statistics, or diagnostics purposes used in production.'
         ]
       },
@@ -362,7 +362,7 @@ export const PRIVACY = {
         id: 'third-parties',
         title: '5. Third parties and processors',
         paragraphs: [
-          'When ads are enabled, Kakao AdFit may cause external requests to Kakao-related domains during ad service delivery.',
+          'External requests to partner domains may occur during the delivery of affiliate banner services.',
           'TODO: Confirm whether third-party sharing, processing delegation, processors, delegated tasks, or cross-border transfers apply under the live operating setup.'
         ]
       },

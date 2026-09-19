@@ -40,61 +40,6 @@ const naverVerification = (process.env.NAVER_SITE_VERIFICATION || '').trim();
 const googleAdsenseAccount = (process.env.GOOGLE_ADSENSE_ACCOUNT || 'ca-pub-7766989656523085').trim();
 const gaMeasurementId = (process.env.GA_MEASUREMENT_ID || '').trim();
 
-function envBool(name, fallback = false) {
-  const raw = process.env[name];
-  if (raw == null || raw === '') return fallback;
-  return String(raw).trim().toLowerCase() === 'true';
-}
-
-const ADFIT_PAGE_GROUPS = {
-  landing: new Set(['home', 'learn', 'about']),
-  play: new Set(['play']),
-  content: new Set([
-    'beginner',
-    'intermediate',
-    'advanced',
-    'rules',
-    'tactics',
-    'openings',
-    'endgames'
-  ]),
-  excluded: new Set(['privacy', '404'])
-};
-
-const adfit = {
-  enabled: envBool('ADFIT_ENABLED', false),
-  enableKo: envBool('ADFIT_ENABLE_KO', true),
-  enableEn: envBool('ADFIT_ENABLE_EN', true),
-  playDesktopSticky: envBool('ADFIT_PLAY_DESKTOP_STICKY', true),
-  units: {
-    landingDesktop: (process.env.ADFIT_LANDING_DESKTOP_728X90 || '').trim(),
-    landingMobile: (process.env.ADFIT_LANDING_MOBILE_320X100 || '').trim(),
-    contentDesktop: (process.env.ADFIT_CONTENT_DESKTOP_300X250 || '').trim(),
-    contentTablet: (process.env.ADFIT_CONTENT_TABLET_728X90 || '').trim(),
-    contentMobile: (process.env.ADFIT_CONTENT_MOBILE_320X100 || '').trim(),
-    playDesktop: (process.env.ADFIT_PLAY_DESKTOP_160X600 || '').trim(),
-    playTablet: (process.env.ADFIT_PLAY_TABLET_728X90 || '').trim(),
-    playMobile: (process.env.ADFIT_PLAY_MOBILE_320X50 || '').trim()
-  }
-};
-
-function isAdfitLanguageEnabled(lang) {
-  if (!adfit.enabled) return false;
-  if (lang === 'ko') return adfit.enableKo;
-  if (lang === 'en') return adfit.enableEn;
-  return false;
-}
-
-function getAdfitPageGroup(pageKey) {
-  for (const [group, keys] of Object.entries(ADFIT_PAGE_GROUPS)) {
-    if (keys.has(pageKey)) return group;
-  }
-  return 'excluded';
-}
-
-function isAdfitPageEnabled(pageKey, lang) {
-  return getAdfitPageGroup(pageKey) !== 'excluded' && isAdfitLanguageEnabled(lang);
-}
 
 function esc(value = '') {
   return String(value)
@@ -113,45 +58,24 @@ function jsonLd(value) {
   return JSON.stringify(value).replaceAll('<', '\\u003c');
 }
 
-function renderAdfitConfig(pageKey, lang) {
-  const group = getAdfitPageGroup(pageKey);
-  if (group === 'excluded' || !isAdfitLanguageEnabled(lang)) return '';
-  const adLabel = lang === 'ko' ? '광고' : 'Advertisement';
-  const attributes = [
-    'class="adfit-config"',
-    'data-adfit-root',
-    `data-adfit-page-group="${esc(group)}"`,
-    `data-adfit-label="${esc(adLabel)}"`,
-    `data-adfit-landing-desktop-unit="${esc(adfit.units.landingDesktop)}"`,
-    `data-adfit-landing-mobile-unit="${esc(adfit.units.landingMobile)}"`,
-    `data-adfit-content-desktop-unit="${esc(adfit.units.contentDesktop)}"`,
-    `data-adfit-content-tablet-unit="${esc(adfit.units.contentTablet)}"`,
-    `data-adfit-content-mobile-unit="${esc(adfit.units.contentMobile)}"`,
-    `data-adfit-play-desktop-unit="${esc(adfit.units.playDesktop)}"`,
-    `data-adfit-play-tablet-unit="${esc(adfit.units.playTablet)}"`,
-    `data-adfit-play-mobile-unit="${esc(adfit.units.playMobile)}"`,
-    `data-adfit-play-desktop-sticky="${adfit.playDesktopSticky ? 'true' : 'false'}"`
-  ];
-  return `<div ${attributes.join(' ')}></div>`;
-}
-
-function renderAdfitInlineHost(pageKey, lang) {
-  if (!isAdfitPageEnabled(pageKey, lang)) return '';
-  return '<div class="adfit-inline-host" data-adfit-host="inline"></div>';
-}
-
-function renderAdfitRailHost(pageKey, lang) {
-  if (!isAdfitPageEnabled(pageKey, lang)) return '';
-  return '<div class="adfit-rail-host" data-adfit-host="rail"></div>';
-}
-
-function renderAdfitStrip(pageKey, lang) {
-  const host = renderAdfitInlineHost(pageKey, lang);
-  return host ? `<div class="adfit-strip">${host}</div>` : '';
+function renderCoupangBanner(lang) {
+  const notice = lang === 'ko'
+    ? '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.'
+    : 'This site participates in Coupang Partners and may earn a commission from qualifying purchases.';
+  return `<section class="coupang-banner-section" aria-label="${lang === 'ko' ? '추천 상품' : 'Recommended Products'}">
+  <div class="container coupang-banner-container">
+    <div class="coupang-banner-frame">
+      <script src="https://ads-partners.coupang.com/g.js"></script>
+      <script>
+	new PartnersCoupang.G({"id":1031229,"template":"carousel","trackingCode":"AF4791224","width":"100%","height":"140","tsource":""});
+      </script>
+    </div>
+    <p class="coupang-disclaimer">${notice}</p>
+  </div>
+</section>`;
 }
 
 function pageScripts(pageKey, lang, scripts = []) {
-  if (isAdfitPageEnabled(pageKey, lang)) scripts.push('/assets/adfit.js');
   return scripts;
 }
 
@@ -460,14 +384,13 @@ function renderHome(lang) {
   return `${head({ lang, pageKey: 'home', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseListSchema, faq], scripts: pageScripts('home', lang) })}
 ${renderHeader(lang, 'home')}
 <main id="main">
-  ${renderAdfitConfig('home', lang)}
+  ${renderCoupangBanner(lang)}
   <section class="hero"><div class="container hero-grid">
     <div><span class="eyebrow">${esc(c.eyebrow)}</span><h1>${c.h1}</h1><p class="hero-lead">${esc(c.lead)}</p>
       <div class="action-row"><a class="button" href="${route('play', lang)}">${esc(c.primary)} <span aria-hidden="true">→</span></a><a class="button button-secondary" href="${route('beginner', lang)}">${esc(c.secondary)}</a></div>
     </div>
     <div class="hero-board-card">${renderBoard('r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2N2N2/PPPP1PPP/R1BQ1RK1 w - - 6 6', labels.developedPosition, true)}<div class="hero-proof">${c.proof.map(([value, label]) => `<div><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div></div>
   </div></section>
-  ${renderAdfitStrip('home', lang)}
   <section class="section section-soft"><div class="container"><div class="section-heading"><div><span class="eyebrow">${esc(labels.practiceLoop)}</span><h2>${esc(c.benefitsHeading)}</h2><p>${esc(c.benefitsLead)}</p></div></div><div class="card-grid">${c.benefits.map((item) => `<article class="card"><span class="card-icon" aria-hidden="true">${item.icon}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div></section>
   <section class="section"><div class="container"><div class="section-heading"><div><span class="eyebrow">${esc(labels.courses)}</span><h2>${esc(c.coursesHeading)}</h2><p>${esc(c.coursesLead)}</p></div><a class="button button-secondary" href="${route('learn', lang)}">${esc(ui.readMore)}</a></div>${renderCourseCards(lang)}</div></section>
   <section class="section section-dark"><div class="container"><div class="stat-grid">${c.stats.map(([value, label]) => `<div class="stat"><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div></div></section>
@@ -501,8 +424,6 @@ function renderPlay(lang) {
   const ui = UI[lang];
   const labels = TEMPLATE_LABELS[lang];
   const crumbs = breadcrumbs('play', lang, c.title);
-  const adfitActive = isAdfitPageEnabled('play', lang);
-  const hasDesktopRail = adfitActive && Boolean(adfit.units.playDesktop);
   const appSchema = {
     '@type': 'SoftwareApplication', name: c.title, applicationCategory: 'GameApplication', operatingSystem: 'Web',
     url: absolute(route('play', lang)), inLanguage: lang,
@@ -511,22 +432,14 @@ function renderPlay(lang) {
   return `${head({ lang, pageKey: 'play', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [appSchema, faqSchema(c.faq)], scripts: pageScripts('play', lang, ['/assets/game.js']) })}
 ${renderHeader(lang, 'play')}
 <main id="main">
-<div class="play-monetized-shell${adfitActive ? ' has-adfit' : ''}"${adfitActive ? ` data-adfit-has-rail="${hasDesktopRail ? 'true' : 'false'}"` : ''}>
-  ${renderAdfitConfig('play', lang)}
-  <div class="play-monetized-grid">
-    <div class="play-primary">
-      <section class="page-hero page-hero--play"><div class="play-inner">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-      ${renderAdfitInlineHost('play', lang)}
-      <section class="chess-app-shell"><div class="play-inner">${gameApp(lang)}
-  <div class="play-guide"><div class="section-heading"><div><span class="eyebrow">${esc(labels.aiLevels)}</span><h2>${lang === 'ko' ? '난이도 선택 기준' : 'Choose a useful level'}</h2></div></div><div class="play-guide-grid">${c.difficulty.map((item, index) => `<article class="card"><span class="card-icon">${index + 1}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div>
-</div></section>
-    </div>
-    ${renderAdfitRailHost('play', lang)}
-  </div>
-</div>
-<section class="section section-soft"><div class="narrow"><div class="section-heading"><div><span class="eyebrow">${esc(labels.howToPractice)}</span><h2>${lang === 'ko' ? '대국을 학습으로 바꾸는 4단계' : 'Turn a game into four learning steps'}</h2></div></div><div class="lesson-list">${c.steps.map(([title, text], index) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${index + 1}</span><div><h3>${esc(title)}</h3><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
-${renderFaq(c.faq, lang)}
-<section class="section"><div class="container"><div class="cta-panel"><div><h2>${lang === 'ko' ? '대국에서 놓친 개념을 바로 보완하세요' : 'Study the skill your game exposed'}</h2><p>${lang === 'ko' ? '기물 손실이 많았다면 초급, 전술을 놓쳤다면 중급, 계획이 막혔다면 고급 코스로 이동하세요.' : 'Choose beginner for loose pieces, intermediate for missed tactics, or advanced for unclear plans.'}</p></div><a class="button" href="${route('learn', lang)}">${esc(ui.learnNow)}</a></div></div></section>
+  ${renderCoupangBanner(lang)}
+  <section class="page-hero page-hero--play"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
+  <section class="chess-app-shell"><div class="container">${gameApp(lang)}
+    <div class="play-guide"><div class="section-heading"><div><span class="eyebrow">${esc(labels.aiLevels)}</span><h2>${lang === 'ko' ? '난이도 선택 기준' : 'Choose a useful level'}</h2></div></div><div class="play-guide-grid">${c.difficulty.map((item, index) => `<article class="card"><span class="card-icon">${index + 1}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div>
+  </div></section>
+  <section class="section section-soft"><div class="narrow"><div class="section-heading"><div><span class="eyebrow">${esc(labels.howToPractice)}</span><h2>${lang === 'ko' ? '대국을 학습으로 바꾸는 4단계' : 'Turn a game into four learning steps'}</h2></div></div><div class="lesson-list">${c.steps.map(([title, text], index) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${index + 1}</span><div><h3>${esc(title)}</h3><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
+  ${renderFaq(c.faq, lang)}
+  <section class="section"><div class="container"><div class="cta-panel"><div><h2>${lang === 'ko' ? '대국에서 놓친 개념을 바로 보완하세요' : 'Study the skill your game exposed'}</h2><p>${lang === 'ko' ? '기물 손실이 많았다면 초급, 전술을 놓쳤다면 중급, 계획이 막혔다면 고급 코스로 이동하세요.' : 'Choose beginner for loose pieces, intermediate for missed tactics, or advanced for unclear plans.'}</p></div><a class="button" href="${route('learn', lang)}">${esc(ui.learnNow)}</a></div></div></section>
 </main>${renderFooter(lang)}`;
 }
 
@@ -539,8 +452,10 @@ function renderLearn(lang) {
     itemListElement: COURSE_SUMMARIES[lang].map((course, index) => ({ '@type': 'ListItem', position: index + 1, item: { '@type': 'Course', name: course.title, description: course.description, url: absolute(route(course.key, lang)), inLanguage: lang, provider: { '@id': `${siteUrl}/#organization` } } }))
   };
   return `${head({ lang, pageKey: 'learn', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseListSchema], scripts: pageScripts('learn', lang) })}
-${renderHeader(lang, 'learn')}<main id="main">${renderAdfitConfig('learn', lang)}<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.learningRoadmap)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-${renderAdfitStrip('learn', lang)}
+${renderHeader(lang, 'learn')}
+<main id="main">
+${renderCoupangBanner(lang)}
+<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.learningRoadmap)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container"><div class="lesson-list">${c.path.map(([n, title, text]) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${n}</span><div><h2>${esc(title)}</h2><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
 <section class="section section-soft"><div class="container"><div class="section-heading"><div><span class="eyebrow">${esc(labels.courses)}</span><h2>${lang === 'ko' ? '18개 핵심 레슨' : '18 focused lessons'}</h2></div></div>${renderCourseCards(lang)}</div></section>
 <section class="section"><div class="container"><div class="section-heading"><div><span class="eyebrow">${esc(labels.selfCheck)}</span><h2>${esc(c.diagnosticTitle)}</h2></div></div><div class="card-grid">${c.diagnostic.map(([title, text]) => `<article class="card"><h3>${esc(title)}</h3><p>${esc(text)}</p></article>`).join('')}</div></div></section>
@@ -572,8 +487,10 @@ function renderCourse(lang, key) {
     ['outcomes', ui.outcomes], ['curriculum', ui.curriculum], ['routine', ui.routine], ['mistakes', ui.mistakes], ['faq', ui.faq]
   ];
   return `${head({ lang, pageKey: key, title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseSchema(c, lang, key), faqSchema(c.faq)], pageType: 'article', scripts: pageScripts(key, lang) })}
-${renderHeader(lang, key)}<main id="main">${renderAdfitConfig(key, lang)}<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(courseEyebrow(c.level, lang))}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p><div class="course-meta"><span class="pill">${esc(c.duration)}</span><span class="pill">${c.lessonCount} ${esc(ui.lessons)}</span><span class="pill">${esc(ui.free)}</span><span class="pill">${esc(ui.noLogin)}</span></div></div></section>
-${renderAdfitStrip(key, lang)}
+${renderHeader(lang, key)}
+<main id="main">
+${renderCoupangBanner(lang)}
+<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(courseEyebrow(c.level, lang))}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p><div class="course-meta"><span class="pill">${esc(c.duration)}</span><span class="pill">${c.lessonCount} ${esc(ui.lessons)}</span><span class="pill">${esc(ui.free)}</span><span class="pill">${esc(ui.noLogin)}</span></div></div></section>
 <section class="section"><div class="container article-layout" data-course-progress="${lang}:${key}"><article class="article-body">
   <section id="outcomes"><h2>${esc(ui.outcomes)}</h2><ul class="check-list">${c.outcomes.map((item) => `<li>${esc(item)}</li>`).join('')}</ul></section>
   <div class="progress-panel"><div><strong>${esc(ui.progress)}</strong><small>${esc(ui.localSave)}</small></div><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress-meter></div><span class="progress-label" data-progress-label>0/${c.lessonCount} · 0%</span></div>
@@ -589,7 +506,7 @@ ${renderAdfitStrip(key, lang)}
   <section id="mistakes"><h2>${esc(ui.mistakes)}</h2><ul class="arrow-list">${c.mistakes.map((item) => `<li>${esc(item)}</li>`).join('')}</ul></section>
   <section id="faq"><h2>${esc(ui.faq)}</h2><div class="faq-list">${c.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
   <div class="action-row"><a class="button button-secondary" href="${route('learn', lang)}">← ${esc(ui.backToCourses)}</a><a class="button" href="${route(nextKey, lang)}">${key === 'advanced' ? esc(ui.playNow) : esc(ui.nextCourse)} →</a></div>
-</article><aside class="article-rail"><nav class="toc"><strong>${esc(ui.toc)}</strong><ol>${tocItems.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}</ol></nav>${renderAdfitRailHost(key, lang)}</aside></div></section></main>${renderFooter(lang)}`;
+</article><aside class="article-rail"><nav class="toc"><strong>${esc(ui.toc)}</strong><ol>${tocItems.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}</ol></nav></aside></div></section></main>${renderFooter(lang)}`;
 }
 
 function articleSchema(c, lang, key) {
@@ -607,11 +524,13 @@ function renderGuide(lang, key) {
   const crumbs = breadcrumbs(key, lang, c.title);
   const toc = c.sections.map((section) => [section.id, section.title]);
   return `${head({ lang, pageKey: key, title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, key), faqSchema(c.faq)], pageType: 'article', scripts: pageScripts(key, lang) })}
-${renderHeader(lang, key)}<main id="main">${renderAdfitConfig(key, lang)}<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.chessGuide)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-${renderAdfitStrip(key, lang)}
+${renderHeader(lang, key)}
+<main id="main">
+${renderCoupangBanner(lang)}
+<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.chessGuide)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}${section.bullets?.length ? `<ul class="arrow-list">${section.bullets.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}${section.fen ? `<figure class="diagram-wrap">${renderBoard(section.fen, section.caption || section.title)}<figcaption class="diagram-caption">${esc(section.caption || '')}</figcaption></figure>` : ''}</section>`).join('')}
 <section id="faq"><h2>${esc(UI[lang].faq)}</h2><div class="faq-list">${c.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
-<div class="cta-panel"><div><h2>${lang === 'ko' ? '읽은 내용을 체스판에서 확인하세요' : 'Test the idea on the board'}</h2><p>${lang === 'ko' ? '컴퓨터와 대국하며 오늘 배운 주제를 한 가지 목표로 정해 보세요.' : 'Play the computer with one lesson from this guide as your game goal.'}</p></div><a class="button" href="${route('play', lang)}">${esc(UI[lang].playNow)}</a></div></article><aside class="article-rail"><nav class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}<li><a href="#faq">${esc(UI[lang].faq)}</a></li></ol></nav>${renderAdfitRailHost(key, lang)}</aside></div></section></main>${renderFooter(lang)}`;
+<div class="cta-panel"><div><h2>${lang === 'ko' ? '읽은 내용을 체스판에서 확인하세요' : 'Test the idea on the board'}</h2><p>${lang === 'ko' ? '컴퓨터와 대국하며 오늘 배운 주제를 한 가지 목표로 정해 보세요.' : 'Play the computer with one lesson from this guide as your game goal.'}</p></div><a class="button" href="${route('play', lang)}">${esc(UI[lang].playNow)}</a></div></article><aside class="article-rail"><nav class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}<li><a href="#faq">${esc(UI[lang].faq)}</a></li></ol></nav></aside></div></section></main>${renderFooter(lang)}`;
 }
 
 function renderAbout(lang) {
@@ -619,8 +538,10 @@ function renderAbout(lang) {
   const labels = TEMPLATE_LABELS[lang];
   const crumbs = breadcrumbs('about', lang, c.title);
   return `${head({ lang, pageKey: 'about', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, 'about')], pageType: 'article', scripts: pageScripts('about', lang) })}
-${renderHeader(lang, 'about')}<main id="main">${renderAdfitConfig('about', lang)}<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.about)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-${renderAdfitStrip('about', lang)}
+${renderHeader(lang, 'about')}
+<main id="main">
+${renderCoupangBanner(lang)}
+<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.about)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container"><div class="card-grid">${c.principles.map(([title, text], index) => `<article class="card"><span class="card-icon">${index + 1}</span><h2>${esc(title)}</h2><p>${esc(text)}</p></article>`).join('')}</div></div></section>
 <section class="section section-soft"><div class="narrow"><h2>${esc(c.limitsTitle)}</h2><ul class="check-list">${c.limits.map((item) => `<li>${esc(item)}</li>`).join('')}</ul><h2>${esc(c.privacyTitle)}</h2><p>${esc(c.privacy)}</p></div></section>
 <section class="section"><div class="container"><div class="cta-panel"><div><h2>${lang === 'ko' ? '코드를 바꾸기 쉬운 구조로 만들었습니다' : 'Built to be easy to customize'}</h2><p>${lang === 'ko' ? '브랜드, 도메인, 인증 태그, 코스 콘텐츠, 색상은 중앙 설정과 콘텐츠 파일에서 수정할 수 있습니다.' : 'Brand, domain, verification tags, course content, and colors are separated into clear configuration and content files.'}</p></div><a class="button" href="${route('learn', lang)}">${esc(UI[lang].learnNow)}</a></div></div></section></main>${renderFooter(lang)}`;
@@ -631,7 +552,10 @@ function renderPrivacy(lang) {
   const crumbs = breadcrumbs('privacy', lang, c.title);
   const toc = c.sections.map((section) => [section.id, section.title]);
   return `${head({ lang, pageKey: 'privacy', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, 'privacy')], pageType: 'article' })}
-${renderHeader(lang, 'privacy')}<main id="main"><section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${lang === 'ko' ? '개인정보 안내' : 'Privacy notice'}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
+${renderHeader(lang, 'privacy')}
+<main id="main">
+${renderCoupangBanner(lang)}
+<section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${lang === 'ko' ? '개인정보 안내' : 'Privacy notice'}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}</section>`).join('')}
 </article><aside class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${esc(id)}">${esc(label)}</a></li>`).join('')}</ol></aside></div></section></main>${renderFooter(lang)}`;
 }

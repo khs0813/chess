@@ -1165,58 +1165,43 @@ tr:last-child td {
   margin-inline: auto;
 }
 
-.adfit-config {
-  display: none;
+/* Coupang Partners Banner */
+.coupang-banner-section {
+  width: 100%;
+  padding: 12px 0 16px;
+  background: transparent;
 }
 
-.adfit-strip {
+.coupang-banner-container {
   width: min(calc(100% - 2rem), var(--container));
   margin-inline: auto;
-}
-
-.adfit-inline-host,
-.adfit-rail-host {
-  min-width: 0;
-}
-
-.adfit-rail-host {
-  display: none;
-}
-
-.adfit-inline-host:not(:empty) {
-  display: grid;
-  place-items: center;
-  padding-block: 24px;
-}
-
-.adfit-slot {
   display: flex;
-  min-width: 0;
   flex-direction: column;
   align-items: center;
 }
 
-.adfit-label {
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.adfit-frame {
-  display: grid;
-  width: var(--adfit-width);
-  min-width: var(--adfit-width);
-  height: var(--adfit-height);
-  min-height: var(--adfit-height);
-  place-items: center;
+.coupang-banner-frame {
+  width: 100%;
+  min-height: 140px;
+  border-radius: 12px;
   overflow: hidden;
-  contain: layout paint;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.adfit-slot[data-adfit-state="no-ad"] .adfit-frame {
-  visibility: hidden;
+.coupang-banner-frame iframe {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  display: block;
+}
+
+.coupang-disclaimer {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.4;
 }
 
 /* Chess application */
@@ -1742,34 +1727,6 @@ tr:last-child td {
   .article-rail .toc {
     position: static;
   }
-
-  .article-rail .adfit-rail-host:not(:empty) {
-    display: grid;
-    place-items: center;
-  }
-}
-
-@media (min-width: 1240px) {
-  .play-monetized-shell[data-adfit-has-rail="true"] .play-monetized-grid {
-    display: grid;
-    align-items: start;
-    gap: 32px;
-    grid-template-columns: minmax(0, 1fr) 160px;
-  }
-
-  .play-monetized-shell[data-adfit-has-rail="true"] .play-inner {
-    width: 100%;
-  }
-
-  .play-monetized-shell[data-adfit-has-rail="true"] .adfit-rail-host {
-    display: block;
-    align-self: stretch;
-  }
-
-  .play-monetized-shell[data-adfit-has-rail="true"] .adfit-rail-host .adfit-slot.is-sticky {
-    position: sticky;
-    top: 92px;
-  }
 }
 
 @media (max-width: 1119px) {
@@ -1788,10 +1745,6 @@ tr:last-child td {
 
   .article-rail .toc ol {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .article-rail .adfit-rail-host {
-    display: none;
   }
 }
 
@@ -1895,12 +1848,6 @@ tr:last-child td {
 }
 
 @media (max-width: 759px) {
-  .adfit-inline-host:not(:empty) {
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    padding-inline: max(0px, env(safe-area-inset-left));
-  }
-
   .page-hero--play {
     padding-top: 2rem;
     padding-bottom: 1.4rem;
@@ -2050,11 +1997,7 @@ tr:last-child td {
   .lesson-check,
   .progress-panel,
   .toast,
-  .adfit-config,
-  .adfit-inline-host,
-  .adfit-rail-host,
-  .adfit-slot,
-  .adfit-strip {
+  .coupang-banner-section {
     display: none !important;
   }
 

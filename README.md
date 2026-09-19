@@ -1,6 +1,6 @@
 # ChessStep
 
-한국어·영어로 컴퓨터와 체스를 두고, 초급·중급·고급 코스를 학습하는 **완전 정적 웹사이트 프로젝트**입니다. 데이터베이스와 외부 체스 API 없이 브라우저에서 대국이 실행되며, Render Static Site에 바로 배포할 수 있습니다. Kakao AdFit은 환경변수로 켠 경우 공개 콘텐츠 페이지에서 페이지당 한 개만 로드됩니다.
+한국어·영어로 컴퓨터와 체스를 두고, 초급·중급·고급 코스를 학습하는 **완전 정적 웹사이트 프로젝트**입니다. 데이터베이스와 외부 체스 API 없이 브라우저에서 대국이 실행되며, Render Static Site에 바로 배포할 수 있습니다.
 
 ## 핵심 기능
 
@@ -52,8 +52,7 @@ npm run dev       # dist가 없으면 빌드한 뒤 로컬 미리보기
 npm run build     # dist 정적 파일 생성
 npm run test      # 체스 엔진과 AI 자동 테스트
 npm run seo:check # 메타데이터·내부 링크·사이트맵 검사
-npm run adfit:check # 광고 런타임 선택·1회 삽입 검사
-npm run check     # 테스트 → 빌드 → SEO → AdFit 검사 전체 실행
+npm run check     # 테스트 → 빌드 → SEO 검사 전체 실행
 ```
 
 ## 환경변수
@@ -65,20 +64,7 @@ SITE_URL=https://www.gameonchess.com
 GOOGLE_SITE_VERIFICATION=
 NAVER_SITE_VERIFICATION=
 GA_MEASUREMENT_ID=
-
-# Kakao AdFit
-ADFIT_ENABLED=false
-ADFIT_ENABLE_KO=true
-ADFIT_ENABLE_EN=true
-ADFIT_PLAY_DESKTOP_STICKY=true
-ADFIT_LANDING_DESKTOP_728X90=
-ADFIT_LANDING_MOBILE_320X100=
-ADFIT_CONTENT_DESKTOP_300X250=
-ADFIT_CONTENT_TABLET_728X90=
-ADFIT_CONTENT_MOBILE_320X100=
-ADFIT_PLAY_DESKTOP_160X600=
-ADFIT_PLAY_TABLET_728X90=
-ADFIT_PLAY_MOBILE_320X50=
+GOOGLE_ADSENSE_ACCOUNT=ca-pub-7766989656523085
 ```
 
 | 변수 | 필수 여부 | 설명 |
@@ -87,18 +73,7 @@ ADFIT_PLAY_MOBILE_320X50=
 | `GOOGLE_SITE_VERIFICATION` | 선택 | Search Console HTML 태그 인증에서 `content` 값만 입력합니다. |
 | `NAVER_SITE_VERIFICATION` | 선택 | 네이버 사이트 소유확인 메타 태그의 `content` 값만 입력합니다. |
 | `GA_MEASUREMENT_ID` | 선택 | `G-XXXXXXXXXX` 형식. 비워 두면 분석 스크립트를 전혀 삽입하지 않습니다. |
-| `ADFIT_ENABLED` | 선택 | `true`일 때 홈·대국·학습·가이드·소개 페이지에 Kakao AdFit 설정을 출력합니다. 기본값은 `false`입니다. |
-| `ADFIT_ENABLE_KO` | 선택 | `true`일 때 한국어 공개 콘텐츠 페이지에 광고를 허용합니다. 기본값은 `true`입니다. |
-| `ADFIT_ENABLE_EN` | 선택 | `true`일 때 영어 공개 콘텐츠 페이지에 광고를 허용합니다. 기본값은 `true`입니다. |
-| `ADFIT_PLAY_DESKTOP_STICKY` | 선택 | 대국 페이지 데스크톱 160×600 레일의 sticky 동작을 제어합니다. 기본값은 `true`입니다. |
-| `ADFIT_LANDING_DESKTOP_728X90` | 선택 | 홈·학습 목록·소개 페이지 데스크톱 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_LANDING_MOBILE_320X100` | 선택 | 홈·학습 목록·소개 페이지 모바일 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_CONTENT_DESKTOP_300X250` | 선택 | 세부 코스·가이드 페이지 데스크톱 목차 레일 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_CONTENT_TABLET_728X90` | 선택 | 세부 코스·가이드 페이지 태블릿 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_CONTENT_MOBILE_320X100` | 선택 | 세부 코스·가이드 페이지 모바일 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_PLAY_DESKTOP_160X600` | 선택 | 대국 페이지 데스크톱 우측 레일 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_PLAY_TABLET_728X90` | 선택 | 대국 페이지 태블릿 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
-| `ADFIT_PLAY_MOBILE_320X50` | 선택 | 대국 페이지 모바일 인라인 광고단위 ID입니다. 실제 ID는 저장소에 넣지 않습니다. |
+| `GOOGLE_ADSENSE_ACCOUNT` | 선택 | Google AdSense 게시자 ID (`ca-pub-XXXXXXXXXXXXXXXX`). |
 
 **중요:** 커스텀 도메인을 연결했다면 `SITE_URL`을 `onrender.com` 주소가 아니라 최종 대표 도메인으로 바꾸고 다시 배포해야 합니다.
 
@@ -110,7 +85,7 @@ ADFIT_PLAY_MOBILE_320X50=
 2. Render 대시보드에서 **New → Blueprint**를 선택합니다.
 3. 저장소를 연결하면 루트의 `render.yaml`을 읽어 Static Site를 만듭니다.
 4. 서비스 환경변수에서 `SITE_URL`을 실제 Render URL 또는 커스텀 도메인으로 수정합니다.
-5. 필요한 경우 Google·네이버 인증값과 Kakao AdFit 광고단위 ID를 입력한 뒤 재배포합니다.
+5. 필요한 경우 Google·네이버 인증값을 입력한 뒤 재배포합니다.
 
 Blueprint 기본값:
 
@@ -189,9 +164,9 @@ Blueprint 기본값:
 - 반응형 1200×630 Open Graph 이미지
 - 내부 링크 기반의 크롤링 가능한 정보 구조
 - 외부 폰트·이미지·체스 API 요청 없음
-- Kakao AdFit과 Google Analytics는 환경변수가 설정된 페이지에서만 선택적으로 로드
+- Google Analytics는 환경변수가 설정된 경우 선택적으로 로드
 
-`npm run seo:check`는 24개 HTML의 기본 SEO 태그, hreflang, JSON-LD, 내부 링크, 사이트맵 URL 수, AdFit 설정 루트와 스크립트 출력 조건을 자동 검사합니다. `npm run adfit:check`는 7개 뷰포트에서 광고 규격 선택과 페이지당 `<ins>` 1개 제한을 검사합니다.
+`npm run seo:check`는 24개 HTML의 기본 SEO 태그, hreflang, JSON-LD, 내부 링크, 사이트맵 URL 수 등을 자동 검사합니다.
 
 
 ## 콘텐츠 수정
@@ -238,10 +213,10 @@ npm run check
 
 ## 개인정보와 운영
 
-- 기본 상태에서는 서버, 데이터베이스, 로그인, 광고, 분석 도구를 사용하지 않습니다.
+- 기본 상태에서는 서버, 데이터베이스, 로그인, 분석 도구를 사용하지 않습니다.
 - 레슨 진행률과 대국 설정은 사용자의 브라우저에만 저장됩니다.
 - `GA_MEASUREMENT_ID`를 설정하면 Google Analytics 스크립트가 삽입되므로 실제 서비스의 개인정보처리방침과 동의 요구사항을 별도로 검토해야 합니다.
-- `ADFIT_ENABLED=true`와 광고단위 ID를 설정하면 홈·대국·학습·가이드·소개 페이지에서 Kakao AdFit 스크립트가 페이지당 한 번만 로드됩니다. 실제 서비스에서는 `/privacy/`와 `/en/privacy/`의 TODO 항목을 운영 정보에 맞게 확정해야 합니다.
+- 쿠팡 파트너스 배너가 포함되어 있으며, 실제 서비스에서는 `/privacy/`와 `/en/privacy/`의 TODO 항목을 운영 정보에 맞게 확정해야 합니다.
 
 ## 프로젝트 구조
 
@@ -251,7 +226,6 @@ chessstep-static/
 ├─ scripts/
 │  ├─ build.mjs              # 24개 정적 페이지와 SEO 파일 생성
 │  ├─ dev-server.mjs         # 로컬 정적 서버
-│  ├─ adfit-check.mjs        # AdFit 런타임 선택 검사
 │  └─ seo-check.mjs          # SEO 자동 검사
 ├─ src/
 │  ├─ assets/                # CSS, 체스 엔진, AI, 대국 UI
