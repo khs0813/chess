@@ -107,3 +107,85 @@ for (const explorer of document.querySelectorAll('[data-piece-explorer]')) {
   }
 }
 
+function initCoupangFloatingBanner() {
+  const banner = document.querySelector('[data-coupang-floating]');
+  if (!banner) return;
+
+  const container = banner.querySelector('[data-coupang-container]');
+  const content = banner.querySelector('[data-coupang-content]');
+  const collapseBtn = banner.querySelector('[data-coupang-collapse]');
+  const collapseLabel = banner.querySelector('[data-coupang-collapse-label]');
+  const chevronIcon = banner.querySelector('.coupang-icon-chevron');
+  const closeBtn = banner.querySelector('[data-coupang-close]');
+  const reopenSlot = document.querySelector('[data-coupang-reopen-slot]');
+  const reopenBtn = document.querySelector('[data-coupang-reopen]');
+
+  const isKo = document.documentElement.lang !== 'en';
+  const txtCollapse = isKo ? '접기' : 'Collapse';
+  const txtExpand = isKo ? '펼치기' : 'Expand';
+  const ariaCollapse = isKo ? '광고 접기' : 'Collapse ad';
+  const ariaExpand = isKo ? '광고 펼치기' : 'Expand ad';
+
+  let isCollapsed = false;
+
+  collapseBtn?.addEventListener('click', () => {
+    isCollapsed = !isCollapsed;
+    banner.classList.toggle('is-collapsed', isCollapsed);
+    if (content) content.hidden = isCollapsed;
+    if (collapseBtn) collapseBtn.setAttribute('aria-label', isCollapsed ? ariaExpand : ariaCollapse);
+    if (collapseLabel) collapseLabel.textContent = isCollapsed ? txtExpand : txtCollapse;
+    if (chevronIcon) chevronIcon.classList.toggle('is-reversed', isCollapsed);
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    banner.hidden = true;
+    if (reopenSlot) reopenSlot.hidden = false;
+  });
+
+  reopenBtn?.addEventListener('click', () => {
+    banner.hidden = false;
+    if (reopenSlot) reopenSlot.hidden = true;
+  });
+
+  if (typeof window !== 'undefined' && window.navigator && window.navigator.webdriver) {
+    return;
+  }
+
+  const COUPANG_SCRIPT_SRC = 'https://ads-partners.coupang.com/g.js';
+  let initialized = false;
+
+  function initWidget() {
+    if (initialized || !container || !window.PartnersCoupang?.G) return;
+    try {
+      new window.PartnersCoupang.G({
+        id: 1031229,
+        template: 'carousel',
+        trackingCode: 'AF4791224',
+        width: '100%',
+        height: '140',
+        tsource: '',
+        container: container,
+      });
+      initialized = true;
+    } catch (err) {
+      console.error('Failed to initialize Coupang Partners floating banner:', err);
+    }
+  }
+
+  if (window.PartnersCoupang?.G) {
+    initWidget();
+  } else {
+    let script = document.querySelector(`script[src="${COUPANG_SCRIPT_SRC}"]`);
+    if (!script) {
+      script = document.createElement('script');
+      script.src = COUPANG_SCRIPT_SRC;
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener('load', initWidget, { once: true });
+  }
+}
+
+initCoupangFloatingBanner();
+
+

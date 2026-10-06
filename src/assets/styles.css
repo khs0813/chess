@@ -1793,52 +1793,248 @@ tr:last-child td {
   margin-inline: auto;
 }
 
-/* Coupang Partners Banner */
-.coupang-banner-section {
-  width: 100%;
-  padding: 12px 0 16px;
-  background: transparent;
+/* Coupang Partners Floating Banner (Sticky Bottom) */
+.coupang-floating-spacer {
+  height: clamp(150px, 22vh, 185px);
+  pointer-events: none;
 }
 
-.coupang-banner-container {
-  width: min(calc(100% - 2rem), var(--container));
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.coupang-banner-frame {
+.coupang-floating-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
   width: 100%;
-  min-height: 140px;
-  border-radius: 12px;
+  max-width: 100vw;
+  pointer-events: none;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm);
+  padding: 0 0.5rem max(0.625rem, env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
-.coupang-banner-frame iframe {
-  width: 100% !important;
+.coupang-floating-banner[hidden] {
+  display: none !important;
+}
+
+.coupang-floating-card {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 -4px 24px rgba(24, 75, 53, 0.12), var(--shadow-sm);
+  padding: 8px 12px;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.coupang-floating-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 4px 6px;
+  font-size: 13px;
+}
+
+.coupang-floating-banner.is-collapsed .coupang-floating-bar {
+  padding-bottom: 2px;
+}
+
+.coupang-floating-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--ink);
+}
+
+.coupang-floating-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.coupang-floating-text {
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.coupang-floating-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.coupang-floating-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.coupang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+  font-family: inherit;
+}
+
+.coupang-btn:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.coupang-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
+.coupang-btn-close {
+  width: 28px;
+  padding: 0;
+  justify-content: center;
+}
+
+.coupang-icon-chevron {
+  transition: transform 0.2s ease;
+}
+
+.coupang-icon-chevron.is-reversed {
+  transform: rotate(180deg);
+}
+
+.coupang-floating-content {
+  padding-top: 4px;
+}
+
+.coupang-floating-content[hidden] {
+  display: none !important;
+}
+
+.coupang-floating-content .coupang-banner-container {
+  width: 100%;
+  max-width: 100%;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--surface-soft);
+}
+
+.coupang-floating-content .coupang-banner-container ins,
+.coupang-floating-content .coupang-banner-container iframe {
   max-width: 100% !important;
+  width: 100% !important;
   border: none !important;
   display: block;
 }
 
 .coupang-disclaimer {
-  margin: 6px 0 0;
+  margin: 6px 0 2px;
   font-size: 11px;
   color: var(--muted);
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
-.chess-app-shell .coupang-banner-section {
-  padding: 1.75rem 0 0;
+/* Reopen button (when dismissed) */
+.coupang-reopen-slot {
+  position: fixed;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  right: 1rem;
+  z-index: 45;
 }
 
-.chess-app-shell .coupang-banner-container {
-  width: 100%;
+.coupang-reopen-slot[hidden] {
+  display: none !important;
+}
+
+.coupang-reopen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(24, 75, 53, 0.15), var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  font-family: inherit;
+}
+
+.coupang-reopen-btn svg {
+  color: var(--accent);
+}
+
+.coupang-reopen-btn:hover {
+  background: var(--surface-soft);
+  transform: translateY(-2px);
+}
+
+.coupang-reopen-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .coupang-floating-card {
+    padding: 6px 8px;
+    border-radius: 14px;
+  }
+  .coupang-floating-text {
+    font-size: 12px;
+  }
+  .coupang-btn {
+    height: 26px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+  .coupang-btn-close {
+    width: 26px;
+  }
+  .coupang-floating-spacer {
+    height: 165px;
+  }
 }
 
 /* Chess application */
@@ -2634,7 +2830,11 @@ tr:last-child td {
   .lesson-check,
   .progress-panel,
   .toast,
-  .coupang-banner-section {
+  .coupang-banner-section,
+  .coupang-floating-banner,
+  .coupang-reopen-slot,
+  .coupang-floating-spacer,
+  .no-print {
     display: none !important;
   }
 

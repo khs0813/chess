@@ -58,21 +58,51 @@ function jsonLd(value) {
   return JSON.stringify(value).replaceAll('<', '\\u003c');
 }
 
-function renderCoupangBanner(lang) {
-  const notice = lang === 'ko'
+function renderCoupangFloatingBanner(lang) {
+  const isKo = lang === 'ko';
+  const notice = isKo
     ? '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.'
     : 'This site participates in Coupang Partners and may earn a commission from qualifying purchases.';
-  return `<section class="coupang-banner-section" aria-label="${lang === 'ko' ? '추천 상품' : 'Recommended Products'}">
-  <div class="container coupang-banner-container">
-    <div class="coupang-banner-frame">
-      <script src="https://ads-partners.coupang.com/g.js"></script>
-      <script>
-	new PartnersCoupang.G({"id":1031229,"template":"carousel","trackingCode":"AF4791224","width":"100%","height":"140","tsource":""});
-      </script>
+  const title = isKo ? '체스·학습 추천 아이템' : 'Chess & Learning Picks';
+  const brand = isKo ? '쿠팡' : 'Coupang';
+  const collapseLabel = isKo ? '접기' : 'Collapse';
+  const collapseAria = isKo ? '광고 접기' : 'Collapse ad';
+  const closeAria = isKo ? '광고 닫기' : 'Close ad';
+  const reopenLabel = isKo ? '쿠팡 특가' : 'Coupang Deals';
+  const reopenAria = isKo ? '쿠팡 추천 특가 열기' : 'Open Coupang recommendations';
+  const slotAria = isKo ? '쿠팡 파트너스 추천 상품' : 'Coupang Partners recommendations';
+  const reopenSlotAria = isKo ? '쿠팡 추천 상품 다시 보기' : 'Reopen Coupang recommendations';
+
+  return `<aside class="coupang-banner-slot coupang-floating-banner no-print" aria-label="${slotAria}" data-coupang-floating>
+  <div class="coupang-floating-card">
+    <div class="coupang-floating-bar">
+      <div class="coupang-floating-title">
+        <span class="coupang-floating-icon" aria-hidden="true">🛍️</span>
+        <span class="coupang-floating-text">${title}</span>
+        <span class="coupang-floating-tag">${brand}</span>
+      </div>
+      <div class="coupang-floating-actions">
+        <button type="button" class="coupang-btn coupang-btn-collapse" data-coupang-collapse aria-label="${collapseAria}">
+          <span data-coupang-collapse-label>${collapseLabel}</span>
+          <svg class="coupang-icon-chevron" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <button type="button" class="coupang-btn coupang-btn-close" data-coupang-close aria-label="${closeAria}">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
     </div>
-    <p class="coupang-disclaimer">${notice}</p>
+    <div class="coupang-floating-content" data-coupang-content>
+      <div class="coupang-banner-container" data-coupang-container></div>
+      <p class="coupang-disclaimer">${notice}</p>
+    </div>
   </div>
-</section>`;
+</aside>
+<aside class="coupang-reopen-slot no-print" data-coupang-reopen-slot hidden aria-label="${reopenSlotAria}">
+  <button type="button" class="coupang-reopen-btn" data-coupang-reopen aria-label="${reopenAria}">
+    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>
+    <span>${reopenLabel}</span>
+  </button>
+</aside>`;
 }
 
 function pageScripts(pageKey, lang, scripts = []) {
@@ -324,6 +354,8 @@ function renderFooter(lang) {
     <div class="footer-bottom"><span>© ${new Date().getUTCFullYear()} ${SITE.name}. ${esc(ui.copyright)}</span><span>${esc(ui.updated)}: ${buildDate}</span></div>
   </div>
 </footer>
+<div class="coupang-floating-spacer no-print" aria-hidden="true"></div>
+${renderCoupangFloatingBanner(lang)}
 <script type="module" src="/assets/site.js"></script>
 </body>
 </html>`;
@@ -423,7 +455,6 @@ function renderHome(lang) {
   return `${head({ lang, pageKey: 'home', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseListSchema, faq], scripts: pageScripts('home', lang) })}
 ${renderHeader(lang, 'home')}
 <main id="main">
-  ${renderCoupangBanner(lang)}
   <section class="hero"><div class="container hero-grid">
     <div><span class="eyebrow">${esc(c.eyebrow)}</span><h1>${c.h1}</h1><p class="hero-lead">${esc(c.lead)}</p>
       <div class="action-row"><a class="button" href="${route('play', lang)}">${esc(c.primary)} <span aria-hidden="true">→</span></a><a class="button button-secondary" href="${route('beginner', lang)}">${esc(c.secondary)}</a></div>
@@ -473,7 +504,6 @@ ${renderHeader(lang, 'play')}
 <main id="main">
   <section class="page-hero page-hero--play"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
   <section class="chess-app-shell"><div class="container">${gameApp(lang)}
-    ${renderCoupangBanner(lang)}
     <div class="play-guide"><div class="section-heading"><div><span class="eyebrow">${esc(labels.aiLevels)}</span><h2>${lang === 'ko' ? '난이도 선택 기준' : 'Choose a useful level'}</h2></div></div><div class="play-guide-grid">${c.difficulty.map((item, index) => `<article class="card"><span class="card-icon">${index + 1}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div>
   </div></section>
   <section class="section section-soft"><div class="narrow"><div class="section-heading"><div><span class="eyebrow">${esc(labels.howToPractice)}</span><h2>${lang === 'ko' ? '대국을 학습으로 바꾸는 4단계' : 'Turn a game into four learning steps'}</h2></div></div><div class="lesson-list">${c.steps.map(([title, text], index) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${index + 1}</span><div><h3>${esc(title)}</h3><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
@@ -493,7 +523,6 @@ function renderLearn(lang) {
   return `${head({ lang, pageKey: 'learn', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseListSchema], scripts: pageScripts('learn', lang) })}
 ${renderHeader(lang, 'learn')}
 <main id="main">
-${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.learningRoadmap)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container"><div class="lesson-list">${c.path.map(([n, title, text]) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${n}</span><div><h2>${esc(title)}</h2><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>
 <section class="section section-soft"><div class="container"><div class="section-heading"><div><span class="eyebrow">${esc(labels.courses)}</span><h2>${lang === 'ko' ? '18개 핵심 레슨' : '18 focused lessons'}</h2></div></div>${renderCourseCards(lang)}</div></section>
@@ -528,7 +557,6 @@ function renderCourse(lang, key) {
   return `${head({ lang, pageKey: key, title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [courseSchema(c, lang, key), faqSchema(c.faq)], pageType: 'article', scripts: pageScripts(key, lang) })}
 ${renderHeader(lang, key)}
 <main id="main">
-${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(courseEyebrow(c.level, lang))}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p><div class="course-meta"><span class="pill">${esc(c.duration)}</span><span class="pill">${c.lessonCount} ${esc(ui.lessons)}</span><span class="pill">${esc(ui.free)}</span><span class="pill">${esc(ui.noLogin)}</span></div></div></section>
 <section class="section"><div class="container article-layout" data-course-progress="${lang}:${key}"><article class="article-body">
   <section id="outcomes"><h2>${esc(ui.outcomes)}</h2><ul class="check-list">${c.outcomes.map((item) => `<li>${esc(item)}</li>`).join('')}</ul></section>
@@ -695,7 +723,6 @@ function renderGuide(lang, key) {
   return `${head({ lang, pageKey: key, title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, key), faqSchema(c.faq)], pageType: 'article', scripts: pageScripts(key, lang) })}
 ${renderHeader(lang, key)}
 <main id="main">
-${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.chessGuide)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => renderGuideSection(section, lang)).join('')}
 <section id="faq"><h2>${esc(UI[lang].faq)}</h2><div class="faq-list">${c.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
@@ -709,7 +736,6 @@ function renderAbout(lang) {
   return `${head({ lang, pageKey: 'about', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, 'about')], pageType: 'article', scripts: pageScripts('about', lang) })}
 ${renderHeader(lang, 'about')}
 <main id="main">
-${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.about)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container"><div class="card-grid">${c.principles.map(([title, text], index) => `<article class="card"><span class="card-icon">${index + 1}</span><h2>${esc(title)}</h2><p>${esc(text)}</p></article>`).join('')}</div></div></section>
 <section class="section section-soft"><div class="narrow"><h2>${esc(c.limitsTitle)}</h2><ul class="check-list">${c.limits.map((item) => `<li>${esc(item)}</li>`).join('')}</ul><h2>${esc(c.privacyTitle)}</h2><p>${esc(c.privacy)}</p></div></section>
@@ -723,7 +749,6 @@ function renderPrivacy(lang) {
   return `${head({ lang, pageKey: 'privacy', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [articleSchema(c, lang, 'privacy')], pageType: 'article' })}
 ${renderHeader(lang, 'privacy')}
 <main id="main">
-${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${lang === 'ko' ? '개인정보 안내' : 'Privacy notice'}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
 <section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}</section>`).join('')}
 </article><aside class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${esc(id)}">${esc(label)}</a></li>`).join('')}</ol></aside></div></section></main>${renderFooter(lang)}`;
