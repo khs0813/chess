@@ -90,33 +90,527 @@ export const GUIDES = {
   rules: {
     ko: {
       metaTitle: '체스 규칙 총정리 | ChessStep',
-      metaDescription: '체스판 배치, 기물 이동, 체크메이트, 캐슬링, 앙파상, 승격, 무승부 조건을 쉽게 정리했습니다.',
+      metaDescription: '체스판 배치, 기물별 이동, 체크·체크메이트, 캐슬링, 앙파상, 폰 승격, 무승부 규칙을 직관적인 다이어그램과 함께 배우세요.',
       title: '체스 규칙: 처음 두기 전에 알아야 할 모든 것',
-      intro: '체스는 상대 킹을 실제로 잡는 게임이 아니라 피할 수 없는 공격인 체크메이트를 만드는 게임입니다. 아래 순서대로 읽으면 바로 첫 대국을 시작할 수 있습니다.',
+      intro: '체스는 상대 킹을 실제로 잡는 게임이 아니라, 피할 수 없는 외통수인 체크메이트(Checkmate)를 완성하는 게임입니다. 아래 가이드를 따라 기물의 이동과 핵심 규칙을 한눈에 익혀보세요.',
       sections: [
-        { id: 'setup', title: '1. 체스판과 초기 배치', paragraphs: ['체스판은 가로 8열(파일 a~h)과 세로 8행(랭크 1~8)으로 이루어진 총 64칸입니다(그림의 하단 파일과 좌측 랭크 좌표 참조). 체스판을 놓을 때는 백에서 보았을 때 오른쪽 아래 구석 칸(h1)이 항상 밝은색 칸이어야 합니다.', '백의 1랭크에는 왼쪽부터 룩(a1), 나이트(b1), 비숍(c1), 퀸(d1), 킹(e1), 비숍(f1), 나이트(g1), 룩(h1)이 놓이고, 2랭크에는 폰 8개가 놓입니다. 퀸은 항상 자기 색 칸에 놓이므로 백 퀸은 밝은 d1, 흑 퀸은 어두운 d8에서 시작합니다.'], bullets: ['백이 항상 먼저 둡니다.', '한 번씩 번갈아 한 수를 둡니다.', '자기 차례를 건너뛸 수 없습니다.'], fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', caption: '표준 초기 배치. 판 하단에 a~h 파일, 좌측에 1~8 랭크 좌표가 표시됩니다. 백 진영 오른쪽 아래 구석(h1)은 밝은색 칸입니다.' },
-        { id: 'pieces', title: '2. 기물별 이동', paragraphs: ['기물 이동은 “선으로 가는 기물”과 “점프하는 기물”로 나누면 쉽습니다. 룩은 가로·세로 직선, 비숍은 대각선, 퀸은 직선과 대각선을 모두 사용합니다. 이 세 기물은 중간에 다른 기물이 있으면 그 너머로 갈 수 없습니다.', '나이트는 ㄱ자 모양으로 움직이며 중간 기물을 뛰어넘습니다. 킹은 모든 방향으로 한 칸만 움직이고, 폰은 앞으로 전진하지만 잡을 때만 대각선 앞으로 갑니다.'], bullets: ['먼저 기물이 가는 “선”을 눈으로 따라가세요.', '내 기물이 길을 막고 있으면 그 뒤 칸은 갈 수 없습니다.', '킹은 공격받는 칸으로 이동할 수 없습니다.'], fen: '7k/8/3n4/8/2B1Q3/4P3/8/R3K2R w KQ - 0 1', caption: '룩은 직선, 비숍은 대각선, 퀸은 둘 다, 나이트는 ㄱ자로 움직인다는 차이를 한 그림에서 비교해 보세요.' },
-        { id: 'check', title: '3. 체크와 체크메이트', paragraphs: ['체크는 내 킹이 공격받고 있다는 경고입니다. 체크를 받으면 다른 계획을 세울 수 없고, 반드시 그 공격부터 해결해야 합니다.', '해결 방법은 세 가지입니다. 킹을 안전한 칸으로 옮기거나, 공격하는 기물을 잡거나, 룩·비숍·퀸의 공격선 사이를 막습니다. 세 방법이 모두 불가능하면 체크메이트입니다.'], bullets: ['나이트 체크는 중간을 막을 수 없습니다.', '더블 체크는 킹 이동으로만 피할 수 있습니다.', '체크 표시는 기보에서 +, 체크메이트는 #를 사용합니다.'], fen: '7k/6Q1/5K2/8/8/8/8/8 b - - 0 1', caption: '흑 킹은 체크를 받았고, 도망갈 칸도 퀸을 잡을 방법도 없어 체크메이트입니다.' },
-        { id: 'special', title: '4. 캐슬링·앙파상·승격', paragraphs: ['특수 규칙은 처음에는 어렵게 느껴지지만 모두 안전과 폰의 움직임에서 나온 규칙입니다. 캐슬링은 킹을 안전하게 옮기고 룩을 중앙 쪽으로 데려오는 수입니다.', '앙파상은 상대 폰이 두 칸 전진해 내 폰 옆을 지나간 바로 다음 수에만 가능합니다. 승격은 폰이 끝까지 전진했을 때 더 강한 기물로 바꾸는 보상입니다.'], bullets: ['캐슬링은 킹과 룩이 이전에 움직이지 않았고 사이 칸이 비어 있어야 합니다.', '킹이 체크 중이거나 지나가는 칸이 공격받으면 캐슬링할 수 없습니다.', '승격은 대부분 퀸을 고르지만 나이트 승격이 더 좋은 예외도 있습니다.'], fen: 'r3k2r/8/8/3pP3/8/8/8/R3K2R w KQkq d6 0 1', caption: '양쪽 킹과 룩은 캐슬링 형태를 보여 주고, e5 폰은 d6으로 앙파상을 할 수 있는 상황입니다.' },
-        { id: 'draws', title: '5. 무승부 조건', paragraphs: ['무승부는 “아무도 이길 수 없는 상태” 또는 “둘 수가 없는 상태”에서 생깁니다. 가장 헷갈리는 예는 스테일메이트입니다. 킹이 체크는 아니지만 합법적인 수가 하나도 없으면 게임은 무승부입니다.', '기물이 너무 적어 체크메이트를 만들 수 없거나, 같은 포지션이 세 번 반복되거나, 폰 이동과 잡기 없이 50수씩 진행되는 경우도 무승부와 관련됩니다.'], bullets: ['킹 대 킹, 킹+비숍 대 킹 등은 메이트가 불가능합니다.', '크게 이기고 있을수록 상대 킹에게 최소 한 수가 남아 있는지 확인하세요.', '스테일메이트는 승리가 아니라 무승부입니다.'], fen: '7k/5Q2/6K1/8/8/8/8/8 b - - 0 1', caption: '흑 킹은 체크가 아니지만 갈 수 있는 칸이 없어 스테일메이트, 즉 무승부입니다.' },
-        { id: 'notation', title: '6. 기보 표기 읽기', paragraphs: ['기보는 체스 수를 짧게 적는 방법입니다. 먼저 기물 문자를 보고, 그다음 도착 칸을 읽으면 됩니다. Nf3는 나이트가 f3로 이동했다는 뜻입니다.', '폰은 별도 문자 없이 e4처럼 도착 칸만 적습니다. 잡기는 x, 체크는 +, 체크메이트는 #를 붙입니다. 기보를 읽을 수 있으면 자신의 대국을 복기하고 레슨의 수순을 그대로 따라갈 수 있습니다.'], bullets: ['킹 K, 퀸 Q, 룩 R, 비숍 B, 나이트 N을 사용합니다.', '폰 이동은 e4처럼 칸 이름만 씁니다.', '캐슬링은 O-O 또는 O-O-O입니다.'], fen: 'rnbqkbnr/pppp1ppp/4p3/8/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2', caption: '이 그림은 백이 e4와 Nf3를 둔 뒤의 형태입니다. 기보의 문자와 실제 말 위치를 연결해 보세요.' }
+        {
+          id: 'setup',
+          title: '1. 체스판과 초기 배치',
+          paragraphs: [
+            '체스판은 가로 8열(파일 a~h)과 세로 8행(랭크 1~8)으로 이루어진 총 64개의 격자 칸입니다. 체스를 시작하기 전 반드시 기억해야 할 3가지 기본 세팅 원칙이 있습니다.'
+          ],
+          setupRules: [
+            { badge: '원칙 1', title: '오른쪽 아래는 밝은 칸 (h1)', text: '체스판을 마주보았을 때 각 플레이어 기준 오른쪽 맨 아래 구석 칸(백 h1, 흑 a8)은 항상 밝은색 칸이어야 합니다 (White on right is light).' },
+            { badge: '원칙 2', title: '퀸은 자기 색 칸에 (d1, d8)', text: '백 퀸은 밝은 칸(d1), 흑 퀸은 어두운 칸(d8)에 서로 정면으로 마주보게 놓입니다 (Queen on her color). 킹은 그 옆인 e열에 놓입니다.' },
+            { badge: '원칙 3', title: '백(White)의 항상 선공', text: '체스는 항상 백이 첫 수를 두며, 양 플레이어가 번갈아가며 한 수씩 둡니다. 자신의 차례를 건너뛰는(패스) 것은 불가능합니다.' }
+          ],
+          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          marks: { h1: 'highlight', d1: 'highlight', d8: 'highlight' },
+          caption: '표준 초기 배치. 오른쪽 아래 구석(h1)과 퀸의 시작 위치(백 d1, 흑 d8)가 하이라이트로 강조되어 있습니다.',
+          bullets: [
+            '1랭크(백)와 8랭크(흑)에 주요 기물(양 끝부터 룩·나이트·비숍·퀸·킹·비숍·나이트·룩)이 놓입니다.',
+            '2랭크(백)와 7랭크(흑)에는 8개의 폰이 빈틈없이 일렬로 배치됩니다.',
+            '기물 배치가 끝나면 백부터 첫 수를 시작합니다.'
+          ]
+        },
+        {
+          id: 'pieces',
+          title: '2. 기물별 이동 방식과 가치',
+          paragraphs: [
+            '체스의 6가지 기물은 각각 고유한 이동 방식과 점수(가치)를 지닙니다. 아래 탭에서 기물을 선택하면 이동할 수 있는 칸(초록 점)과 잡을 수 있는 상대 말(붉은 링)이 체스판에 직관적으로 표시됩니다.',
+            '기물은 아군 기물이 있는 칸으로 갈 수 없으며, 상대 기물이 있는 칸에 착지하면 그 기물을 잡고(Capture) 판에서 제거합니다.'
+          ],
+          pieces: [
+            {
+              id: 'pawn',
+              icon: '♙',
+              name: '폰 (Pawn)',
+              value: '1점',
+              type: '전진 이동 & 대각선 잡기',
+              fen: '8/8/8/8/8/3p1n2/4P3/8 w - - 0 1',
+              marks: { e2: 'selected', e3: 'legal', e4: 'legal', d3: 'capture', f3: 'capture' },
+              caption: 'e2 백 폰: 앞으로 1칸(e3) 또는 첫 수에 2칸(e4) 전진할 수 있고(초록 점), 대각선 앞(d3, f3)의 적을 잡을 수 있습니다(붉은 링).',
+              moveText: '앞으로만 1칸씩 전진합니다. 단, 아직 한 번도 움직이지 않은 시작 랭크(2랭크)에서는 첫 수에 한해 앞으로 2칸을 한 번에 전진할 수 있습니다. 뒤나 옆으로는 절대 갈 수 없습니다.',
+              captureText: '직진할 때는 상대 기물을 잡을 수 없습니다! 오직 대각선 앞 1칸(d3, f3)에 있는 상대 기물만 잡을 수 있습니다. 바로 앞 칸이 막혀 있으면 전진할 수 없습니다.',
+              tip: '폰은 점수가 1점으로 가장 낮지만, 반대편 끝(8랭크)에 도달하면 가장 강력한 퀸으로 승격(Promotion)할 수 있는 무한한 잠재력을 가집니다.'
+            },
+            {
+              id: 'knight',
+              icon: '♘',
+              name: '나이트 (Knight)',
+              value: '3점',
+              type: 'L자 점프 (기물 뛰어넘기)',
+              fen: '8/8/5p2/2r1p3/4N3/4P3/8/8 w - - 0 1',
+              marks: { e4: 'selected', c3: 'legal', d2: 'legal', d6: 'legal', f2: 'legal', g3: 'legal', g5: 'legal', c5: 'capture', f6: 'capture' },
+              caption: 'e4 나이트가 점프할 수 있는 8개의 L자 착지 칸. e3·e5의 폰을 뛰어넘어 빈 칸(초록 점)으로 이동하거나 적 기물(c5, f6 붉은 링)을 잡습니다.',
+              moveText: '‘L자’ 모양으로 움직입니다: 한 방향으로 2칸 직진 후 수직으로 1칸 꺾이거나, 1칸 직진 후 2칸 꺾입니다. 착지 칸의 색상은 항상 출발 칸과 반대 색상(밝은 칸↔어두운 칸)이 됩니다.',
+              captureText: '체스에서 유일하게 다른 기물을 뛰어넘을 수 있는 특수 능력이 있습니다! 중간에 아군이나 적군이 길을 막고 있어도 무시하고 최종 L자 도착 칸의 상대 기물을 잡습니다.',
+              tip: '중앙에 위치한 나이트는 8개 칸을 제어하지만, 구석(a1 등)에 있는 나이트는 2개 칸밖에 제어하지 못합니다. 나이트는 중앙으로 전개하는 것이 핵심입니다.'
+            },
+            {
+              id: 'bishop',
+              icon: '♗',
+              name: '비숍 (Bishop)',
+              value: '3점',
+              type: '대각선 무제한',
+              fen: '8/1r6/8/8/4B3/8/6P1/8 w - - 0 1',
+              marks: { e4: 'selected', b7: 'capture', d5: 'legal', c6: 'legal', f5: 'legal', g6: 'legal', h7: 'legal', d3: 'legal', c2: 'legal', b1: 'legal', f3: 'legal' },
+              caption: 'e4 비숍은 대각선을 따라 전진합니다. b7의 적 룩을 잡을 수 있고(붉은 링), 장애물(g2 아군 폰, b7 너머 a8) 뒤로는 뛰어넘을 수 없습니다.',
+              moveText: '자신이 놓여 있는 대각선 4방향으로 원하는 칸 수만큼 자유롭게 전진하거나 후퇴할 수 있습니다. 다른 기물을 뛰어넘을 수는 없습니다.',
+              captureText: '대각선 이동 경로상에 위치한 첫 번째 상대 기물을 잡고 그 자리에 멈춰 섭니다.',
+              tip: '비숍은 게임 내내 자신이 처음 시작한 칸의 색깔(밝은 칸 또는 어두운 칸)로만 영원히 다닙니다. 두 비숍(비숍 페어)을 보존하면 판 전체의 모든 대각선을 지배할 수 있습니다.'
+            },
+            {
+              id: 'rook',
+              icon: '♖',
+              name: '룩 (Rook)',
+              value: '5점',
+              type: '가로·세로 직선 무제한',
+              fen: '8/4n3/8/8/1P2R3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e7: 'capture', e5: 'legal', e6: 'legal', c4: 'legal', d4: 'legal', f4: 'legal', g4: 'legal', h4: 'legal', e3: 'legal', e2: 'legal', e1: 'legal' },
+              caption: 'e4 룩은 가로와 세로 십자 방향으로 뻗어나갑니다. e7의 적 나이트를 잡을 수 있으며(붉은 링), b4 아군 폰이나 e7 너머로는 갈 수 없습니다.',
+              moveText: '가로 방향과 세로 방향 직선으로 장애물이 없는 한 원하는 칸 수만큼 끝까지 이동할 수 있습니다.',
+              captureText: '직선 이동 경로상에 놓인 첫 번째 상대 기물을 잡고 그 위치를 차지합니다.',
+              tip: '룩은 5점의 높은 가치를 지닌 중기물(Major Piece)입니다. 폰이 없는 ‘열린 파일(Open File)’이나 7랭크에 룩을 배치하면 상대 진영을 맹폭할 수 있습니다.'
+            },
+            {
+              id: 'queen',
+              icon: '♕',
+              name: '퀸 (Queen)',
+              value: '9점',
+              type: '직선 + 대각선 (최강 기물)',
+              fen: '8/4r3/6n1/8/4Q3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e7: 'capture', g6: 'capture', e5: 'legal', e6: 'legal', a4: 'legal', b4: 'legal', c4: 'legal', d4: 'legal', f4: 'legal', g4: 'legal', h4: 'legal', e3: 'legal', e2: 'legal', e1: 'legal', d5: 'legal', c6: 'legal', b7: 'legal', a8: 'legal', f5: 'legal', d3: 'legal', c2: 'legal', b1: 'legal', f3: 'legal', g2: 'legal', h1: 'legal' },
+              caption: '체스 최강의 기물 e4 퀸. 룩의 십자 이동과 비숍의 대각선 이동을 합쳐 무려 8방향 25개 칸을 장악하며 e7과 g6의 적을 잡을 수 있습니다.',
+              moveText: '룩(가로·세로 직선)과 비숍(대각선)의 능력을 동시에 지닌 체스 최강의 기물입니다. 8방향 어디로든 원하는 만큼 이동합니다(뛰어넘기는 불가).',
+              captureText: '가로, 세로, 대각선 경로상에서 마주치는 첫 번째 상대 기물을 잡을 수 있습니다.',
+              tip: '가장 강력하고 가치가 높은(9점) 기물이므로, 오프닝 초반에 너무 일찍 꺼내면 상대 나이트나 폰에게 쫓겨 소중한 전개 템포를 잃을 수 있습니다.'
+            },
+            {
+              id: 'king',
+              icon: '♔',
+              name: '킹 (King)',
+              value: '무한대 (승패 직결)',
+              type: '모든 방향 1칸 (절대 보호)',
+              fen: '3r4/8/8/4p3/4K3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e5: 'capture', d3: 'danger', d4: 'danger', d5: 'danger', e3: 'legal', f3: 'legal', f4: 'legal', f5: 'legal' },
+              caption: 'e4 킹은 사방 1칸씩 이동합니다. e5 적 폰을 잡을 수 있지만(붉은 링), d열(d3, d4, d5)은 적 룩의 공격선(위험 칸)이므로 스스로 들어갈 수 없습니다.',
+              moveText: '가로, 세로, 대각선 모든 방향으로 딱 1칸씩만 이동할 수 있습니다.',
+              captureText: '인접한 칸에 있는 상대 기물을 잡을 수 있습니다. 단, 그 기물이 다른 상대 기물의 보호를 받고 있다면 잡을 수 없습니다(자신이 체크당하기 때문).',
+              tip: '절대 규칙: 킹은 상대 기물에게 공격받는 위험한 칸으로 스스로 걸어 들어갈 수 없습니다! 킹이 체크메이트당하면 게임이 즉시 패배로 끝납니다.'
+            }
+          ]
+        },
+        {
+          id: 'check',
+          title: '3. 체크, 체크메이트, 스테일메이트',
+          paragraphs: [
+            '체크는 내 킹이 상대 기물에게 직접 공격받고 있다는 강력한 경고입니다. 체크를 당하면 다른 작전은 모두 중단하고 반드시 그 공격부터 해결해야 합니다.',
+            '체크를 벗어나는 방법은 전 세계 공통의 3가지 공식, 즉 CPR 법칙(Capture 잡기, Protect 막기, Run 피하기)뿐입니다. 이 세 가지가 모두 불가능한 상황이 바로 ‘체크메이트’입니다.'
+          ],
+          cprCards: [
+            { letter: 'C', title: 'Capture (공격자 잡기)', text: '내 킹을 위협하고 있는 상대 기물을 킹이나 다른 내 기물로 직접 잡아서 위협을 원천 제거합니다.' },
+            { letter: 'P', title: 'Protect (공격선 막기)', text: '원거리 공격 기물(퀸·룩·비숍)과 킹 사이의 길목에 내 기물을 끼워 넣어 방패로 막습니다. (나이트는 뛰어넘으므로 막기 불가!)' },
+            { letter: 'R', title: 'Run (안전한 칸으로 피하기)', text: '공격받지 않는 인접한 안전한 빈 칸으로 킹을 직접 이동시켜 대피합니다.' }
+          ],
+          compareCards: [
+            { type: 'is-check', title: '체크 (Check)', tag: '위험 경고', formula: '킹 공격당함 + CPR 탈출 가능', text: '게임이 끝나지 않습니다. 다음 한 수에서 잡기, 막기, 피하기 중 하나로 킹을 반드시 안전하게 만들어야 합니다.' },
+            { type: 'is-mate', title: '체크메이트 (Checkmate)', tag: '게임 종료 (승리/패배)', formula: '킹 공격당함 + CPR 탈출 불가', text: '피할 수 없는 완벽한 공격! 체크를 건 쪽이 즉시 승리하며 대국이 종료됩니다. 기보 표기는 #' },
+            { type: 'is-stalemate', title: '스테일메이트 (Stalemate)', tag: '무승부 (비김)', formula: '킹 공격 안 당함 + 둘 수 있는 수 0개', text: '체크가 아닌데 합법적인 수가 전혀 없습니다! 아무리 기물이 많아도 즉시 무승부로 판정되는 초보자 최대 함정입니다.' }
+          ],
+          fen: '7k/6Q1/5K2/8/8/8/8/8 b - - 0 1',
+          marks: { h8: 'check', g7: 'selected' },
+          caption: '체크메이트 상황: 백 퀸(g7)이 흑 킹(h8)을 체크했고, 백 킹(f6)이 퀸을 지키고 있어 흑은 잡을 수도, 막을 수도, 피할 칸도 없어 백의 승리입니다.'
+        },
+        {
+          id: 'special',
+          title: '4. 특수 규칙 3가지 (캐슬링·앙파상·승격)',
+          paragraphs: [
+            '체스에는 일반적인 기물 이동과 다른 세 가지 특별한 규칙이 존재합니다. 킹을 안전하게 숨기는 ‘캐슬링’, 스쳐 지나간 폰을 잡는 ‘앙파상’, 그리고 폰이 최강 기물로 진화하는 ‘승격’입니다.'
+          ],
+          specialRules: [
+            {
+              title: '1. 캐슬링 (Castling: 킹과 룩의 동시 이동)',
+              boards: [
+                {
+                  label: '캐슬링 준비 상태',
+                  fen: 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1',
+                  marks: { e1: 'selected', g1: 'legal', c1: 'legal', h1: 'highlight', a1: 'highlight' },
+                  caption: '백 킹(e1)과 룩(a1, h1)이 아직 움직이지 않았고 사이의 길이 비어 있습니다.'
+                },
+                {
+                  label: '킹사이드 캐슬링 완료 (O-O)',
+                  fen: 'r3k2r/8/8/8/8/8/8/R4RK1 b kq - 1 1',
+                  marks: { e1: 'from', g1: 'to', h1: 'from', f1: 'to' },
+                  caption: '킹이 오른쪽으로 2칸(g1) 대피하고, h1 룩이 킹을 뛰어넘어 f1에 배치되었습니다.'
+                }
+              ],
+              paragraphs: [
+                '한 번의 수로 킹과 룩을 동시에 움직여, 킹을 안전한 구석으로 대피시키고 룩을 중앙으로 출격시키는 유일한 특수 수입니다.'
+              ],
+              bullets: [
+                '킹사이드 캐슬링 (O-O, 짧은 캐슬링): 백 킹이 오른쪽으로 2칸(g1) 이동하고, h1 룩이 킹을 뛰어넘어 f1에 착지합니다.',
+                '퀸사이드 캐슬링 (O-O-O, 긴 캐슬링): 백 킹이 왼쪽으로 2칸(c1) 이동하고, a1 룩이 킹을 뛰어넘어 d1에 착지합니다.',
+                '❌ 3대 금지 조건: ① 킹이나 해당 룩이 이미 움직인 적이 있을 때 ② 현재 킹이 체크 상태일 때 ③ 킹이 지나가거나 도착할 칸이 상대에게 공격받고 있을 때. (단, 룩이 공격받는 것은 캐슬링에 지장이 없습니다!)'
+              ]
+            },
+            {
+              title: '2. 앙파상 (En Passant: 스쳐 지나간 폰 잡기)',
+              boards: [
+                {
+                  label: '흑 폰의 2칸 전진 직후',
+                  fen: '8/8/8/3pP3/8/8/8/8 w - d6 0 1',
+                  marks: { e5: 'selected', d6: 'legal', d5: 'capture' },
+                  caption: '흑이 d7에서 d5로 2칸 급전진한 바로 그 순간, 백 폰(e5)이 d6으로 가면서 d5 폰을 잡을 수 있습니다.'
+                },
+                {
+                  label: '앙파상 포획 완료',
+                  fen: '8/8/3P4/8/8/8/8/8 b - - 0 1',
+                  marks: { e5: 'from', d6: 'to' },
+                  caption: '백 폰이 d6에 착지하고, 스쳐 지나갔던 d5 흑 폰은 체스판에서 완전히 제거되었습니다.'
+                }
+              ],
+              paragraphs: [
+                '상대 폰이 시작 위치에서 2칸 전진하여 내 폰(e5) 바로 옆(d5)에 나란히 도착했을 때 발생하는 특별한 포획 규칙입니다.'
+              ],
+              bullets: [
+                '내 폰(e5)이 상대 폰이 스쳐 지나간 대각선 뒤 칸(d6)으로 이동하면서 d5의 상대 폰을 체스판에서 제거합니다.',
+                '⚠️ 엄격한 타이밍: 상대 폰이 2칸 전진한 ‘바로 그 다음 한 수’에만 행사할 수 있습니다! 다른 수를 두면 앙파상 권리는 영구히 사라집니다.'
+              ]
+            },
+            {
+              title: '3. 폰 승격 (Promotion: 폰의 궁극적 진화)',
+              boards: [
+                {
+                  label: '승격 1칸 전',
+                  fen: '4k3/4P3/8/8/8/8/8/4K3 w - - 0 1',
+                  marks: { e7: 'selected', e8: 'legal' },
+                  caption: 'e7 백 폰이 상대 끝선인 8랭크(e8)로 1칸만 전진하면 그 즉시 승격이 발동합니다.'
+                },
+                {
+                  label: '퀸으로 즉시 변신',
+                  fen: '4Qk2/8/8/8/8/8/8/4K3 b - - 0 1',
+                  marks: { e7: 'from', e8: 'to' },
+                  caption: '가장 약한 1점짜리 폰이 8랭크에 닿아 최강의 9점짜리 퀸으로 진화하여 적 킹을 위협합니다.'
+                }
+              ],
+              paragraphs: [
+                '가장 약한 1점짜리 폰이 상대 진영 끝(백은 8랭크, 흑은 1랭크)까지 완주하면, 그 즉시 퀸, 룩, 비숍, 나이트 중 원하는 기물로 변신합니다.'
+              ],
+              bullets: [
+                '판 위에 이미 퀸이 살아있어도 두 번째, 세 번째 퀸을 새로 만들 수 있습니다.',
+                '실전에서는 95% 이상 가장 강력한 퀸을 선택하지만, 스테일메이트를 피하기 위해 나이트로 승격하는 절묘한 전술도 존재합니다.'
+              ]
+            }
+          ]
+        },
+        {
+          id: 'draws',
+          title: '5. 무승부 조건 5가지',
+          paragraphs: [
+            '체스는 어느 한쪽의 승리로 끝나지 않고 무승부(Draw)로 끝나는 경우가 자주 발생합니다. 무승부 조건을 정확히 알아야 불리한 판을 비기거나, 다 이긴 판을 비기는 참사를 막을 수 있습니다.'
+          ],
+          fen: '7k/5Q2/6K1/8/8/8/8/8 b - - 0 1',
+          marks: { h8: 'danger', f7: 'selected' },
+          caption: '대표적인 스테일메이트: 흑 킹은 체크가 아니지만, 둘 수 있는 합법적인 수가 전혀 없어 즉시 무승부로 끝납니다.',
+          bullets: [
+            '1. 스테일메이트 (Stalemate): 킹이 체크 상태가 아닌데 합법적인 수가 하나도 없을 때 (초보자가 가장 많이 범하는 무승부)',
+            '2. 기물 부족 무승부 (Insufficient Material): 킹 대 킹, 킹+비숍 대 킹, 킹+나이트 대 킹처럼 양쪽 모두 체크메이트가 불가능한 기물만 남았을 때',
+            '3. 3회 동형반복 (Threefold Repetition): 판의 기물 배치와 둘 수 있는 권리가 완전히 동일하게 3번 반복되었을 때',
+            '4. 50수 규칙 (Fifty-Move Rule): 양 플레이어가 폰의 이동이나 기물 잡기 없이 연속 50수를 두었을 때',
+            '5. 합의 무승부 (Draw by Agreement): 두 대국자가 대국 도중 무승부에 상호 합의했을 때'
+          ]
+        },
+        {
+          id: 'notation',
+          title: '6. 체스 기보(표기법) 읽기',
+          paragraphs: [
+            '체스 기보(대수 표기법, Algebraic Notation)는 체스판에서 일어나는 모든 수를 전 세계 공통으로 기록하는 언어입니다. 기보를 읽을 줄 알면 자신의 대국을 복기하고 체스 책과 강좌를 쉽게 이해할 수 있습니다.'
+          ],
+          notationTable: [
+            { sym: 'K / Q / R / B / N', meaning: '기물 약자', example: 'Nf3', desc: '킹(K), 퀸(Q), 룩(R), 비숍(B), 나이트(N). 폰은 기호 없이 칸 이름만 표기.' },
+            { sym: 'e4 / d5', meaning: '폰 이동', example: '1. e4 e5', desc: '폰은 기물 글자 없이 도착 칸의 좌표만 적습니다.' },
+            { sym: 'x', meaning: '기물 잡기 (Capture)', example: 'Bxf7', desc: '비숍이 f7 칸의 상대 기물을 잡았음을 의미합니다.' },
+            { sym: '+', meaning: '체크 (Check)', example: 'Qh7+', desc: '퀸이 h7으로 이동하여 상대 킹을 체크했습니다.' },
+            { sym: '#', meaning: '체크메이트 (Checkmate)', example: 'Qxf7#', desc: 'f7에서 기물을 잡으며 체크메이트로 게임이 끝났습니다.' },
+            { sym: 'O-O', meaning: '킹사이드 캐슬링', example: 'O-O', desc: '오른쪽 짧은 캐슬링 (킹이 g열로 이동).' },
+            { sym: 'O-O-O', meaning: '퀸사이드 캐슬링', example: 'O-O-O', desc: '왼쪽 긴 캐슬링 (킹이 c열로 이동).' },
+            { sym: '=Q', meaning: '폰 승격 (Promotion)', example: 'e8=Q', desc: 'e8에 도달한 폰이 퀸으로 승격되었습니다.' }
+          ],
+          fen: 'rnbqkbnr/pppp1ppp/4p3/8/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+          marks: { e4: 'selected', f3: 'selected' },
+          caption: '백의 1. e4(폰 전진)와 2. Nf3(나이트 전개)가 적용된 포지션입니다.'
+        }
       ],
-      faq: [['킹을 실제로 잡나요?', '아니요. 피할 수 없는 체크인 체크메이트가 만들어지는 순간 게임이 끝납니다.'], ['캐슬링 중 룩이 공격받아도 되나요?', '네. 킹의 출발·통과·도착 칸이 안전하면 룩이 공격받고 있어도 캐슬링할 수 있습니다.'], ['폰은 언제 두 칸 움직일 수 있나요?', '각 폰이 자신의 시작 랭크에 있고 앞의 두 칸이 모두 비어 있을 때 한 번에 두 칸 전진할 수 있습니다.']]
+      faq: [
+        ['킹을 실제로 체스판에서 잡나요?', '아니요. 킹은 결코 물리적으로 잡히지 않습니다. 피할 수 없는 체크인 체크메이트가 완성되는 순간 대국이 즉시 종료됩니다.'],
+        ['캐슬링할 때 룩이 공격받고 있어도 되나요?', '네, 가능합니다! 킹의 출발 칸, 지나가는 칸, 도착 칸만 안전하다면 룩이 공격받고 있어도 캐슬링할 수 있습니다.'],
+        ['폰은 언제 두 칸 움직일 수 있나요?', '각 폰이 게임 시작 위치인 자신의 초기 랭크(백은 2랭크, 흑은 7랭크)에 있고 앞의 두 칸이 모두 비어 있을 때 첫 이동에 한해 두 칸 전진할 수 있습니다.'],
+        ['스테일메이트와 체크메이트의 결정적 차이는 무엇인가요?', '현재 킹이 “체크를 당하고 있는가”입니다. 체크를 당하고 있는데 피할 수 없으면 체크메이트(패배), 체크를 당하지 않았는데 둘 수 있는 수가 전혀 없으면 스테일메이트(무승부)입니다.']
+      ]
     },
     en: {
       metaTitle: 'Chess Rules Guide | ChessStep',
-      metaDescription: 'Learn setup, piece moves, checkmate, castling, en passant, promotion, and draws.',
+      metaDescription: 'Learn board setup, piece moves, checkmate, castling, en passant, and draws.',
       title: 'Chess rules: Everything before your first game',
-      intro: 'Chess is not won by physically capturing the king. The goal is checkmate: an attack the king cannot escape. Follow the sections in order and you will be ready to play.',
+      intro: 'Chess is not won by capturing the king physically. The goal is checkmate: an inescapable attack against the king. Follow this visual guide to master the rules at a glance.',
       sections: [
-        { id: 'setup', title: '1. Board and starting position', paragraphs: ['A chessboard has 64 squares in an 8×8 grid with files a through h along the bottom and ranks 1 through 8 on the left. From White’s side, the lower-right corner (h1) is always a light square. White’s pawns begin on the 2nd rank and Black’s pawns on the 7th rank.', 'The first-rank order from left to right is rook (a1), knight (b1), bishop (c1), queen (d1), king (e1), bishop (f1), knight (g1), and rook (h1). Queens begin on their own color: White on light d1 and Black on dark d8.'], bullets: ['White always moves first.', 'Players alternate one move at a time.', 'A player may not pass a turn.'], fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', caption: 'The standard starting position. Files a–h are shown at the bottom and ranks 1–8 on the left. White’s lower-right corner (h1) is light.' },
-        { id: 'pieces', title: '2. How the pieces move', paragraphs: ['Piece movement is easier if you separate “line pieces” from “jumping pieces.” Rooks move horizontally and vertically, bishops move diagonally, and queens do both. These three cannot pass through another piece.', 'Knights move in an L-shape and can jump over pieces. Kings move one square in any direction, and pawns move forward but capture diagonally forward.'], bullets: ['Trace the line a piece uses before choosing a square.', 'If one of your pieces blocks the path, the squares behind it are not available.', 'The king may never move onto an attacked square.'], fen: '7k/8/3n4/8/2B1Q3/4P3/8/R3K2R w KQ - 0 1', caption: 'Compare the rook’s straight lines, the bishop’s diagonals, the queen’s combined movement, and the knight’s L-shape.' },
-        { id: 'check', title: '3. Check and checkmate', paragraphs: ['Check means your king is under attack. When you are in check, every other plan must wait; your move must solve the check first.', 'There are three answers: move the king, capture the attacking piece, or block a rook, bishop, or queen line. If none of those answers exists, it is checkmate.'], bullets: ['A knight check cannot be blocked.', 'A double check can only be answered by moving the king.', 'Notation uses + for check and # for checkmate.'], fen: '7k/6Q1/5K2/8/8/8/8/8 b - - 0 1', caption: 'Black is in check, cannot capture the queen, and has no safe square, so this is checkmate.' },
-        { id: 'special', title: '4. Castling, en passant, and promotion', paragraphs: ['Special rules feel unusual at first, but each one follows from king safety or pawn movement. Castling moves the king toward safety and brings the rook closer to the center.', 'En passant is available only on the move immediately after an enemy pawn advances two squares beside your pawn. Promotion rewards a pawn that reaches the final rank by turning it into a stronger piece.'], bullets: ['For castling, the king and rook must not have moved and the squares between them must be empty.', 'You cannot castle out of check, through check, or into check.', 'Most promotions become queens, but knight promotion can be the best exception.'], fen: 'r3k2r/8/8/3pP3/8/8/8/R3K2R w KQkq d6 0 1', caption: 'The kings and rooks show castling shapes, while White’s e5 pawn can capture en passant on d6.' },
-        { id: 'draws', title: '5. Draw conditions', paragraphs: ['A draw happens when neither side can win or when the side to move has no legal move without being in check. The most confusing example is stalemate: the king is not attacked, but there is no legal move.', 'Too little mating material, threefold repetition, and fifty moves by each side without a pawn move or capture are also draw mechanisms.'], bullets: ['King versus king and king plus bishop versus king cannot force mate.', 'When you are far ahead, make sure the enemy king still has at least one legal move before the final mate net.', 'Stalemate is a draw, not a win.'], fen: '7k/5Q2/6K1/8/8/8/8/8 b - - 0 1', caption: 'Black is not in check, but every legal square is covered. That makes the position stalemate.' },
-        { id: 'notation', title: '6. Read algebraic notation', paragraphs: ['Notation is a compact way to write chess moves. Read the piece letter first, then the destination square. Nf3 means a knight moved to f3.', 'Pawns use no letter, so e4 is simply a pawn move. Captures use x, check uses +, and checkmate uses #. Once you can read notation, you can review your own games and follow lesson lines.'], bullets: ['Use K, Q, R, B, and N for the pieces.', 'Pawn moves use only the square name, such as e4.', 'Castling is O-O or O-O-O.'], fen: 'rnbqkbnr/pppp1ppp/4p3/8/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2', caption: 'This position shows White after e4 and Nf3. Connect the notation letters with the pieces on the board.' }
+        {
+          id: 'setup',
+          title: '1. Board and starting position',
+          paragraphs: [
+            'A chessboard consists of 64 light and dark squares in an 8×8 grid with files a through h along the bottom and ranks 1 through 8 on the side. Keep three setup principles in mind before every game.'
+          ],
+          setupRules: [
+            { badge: 'Rule 1', title: 'White on right is light (h1)', text: 'From each player’s view, the bottom-right corner square (h1 for White, a8 for Black) must always be a light-colored square.' },
+            { badge: 'Rule 2', title: 'Queen on her own color (d1, d8)', text: 'White queen begins on light d1 and Black queen on dark d8, facing each other directly across the board. Kings stand on the e-file.' },
+            { badge: 'Rule 3', title: 'White always moves first', text: 'White always plays the opening move. Players alternate one move at a time, and neither player may pass a turn.' }
+          ],
+          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          marks: { h1: 'highlight', d1: 'highlight', d8: 'highlight' },
+          caption: 'Standard starting position. The lower-right corner (h1) and queen home squares (White d1, Black d8) are highlighted.',
+          bullets: [
+            'Major and minor pieces occupy the 1st (White) and 8th (Black) ranks: R, N, B, Q, K, B, N, R from left to right.',
+            'Eight pawns line up along the 2nd (White) and 7th (Black) ranks.',
+            'Once setup is complete, White plays the first move.'
+          ]
+        },
+        {
+          id: 'pieces',
+          title: '2. How the pieces move and their values',
+          paragraphs: [
+            'Each of the six chess pieces has a distinct movement pattern, capture mechanism, and strategic point value. Click any piece tab below to view legal destination squares (green dots) and capture targets (red rings).',
+            'Pieces cannot land on squares occupied by friendly pieces. When landing on an enemy square, the enemy piece is captured and removed from play.'
+          ],
+          pieces: [
+            {
+              id: 'pawn',
+              icon: '♙',
+              name: 'Pawn',
+              value: '1 pt',
+              type: 'Forward move & diagonal capture',
+              fen: '8/8/8/8/8/3p1n2/4P3/8 w - - 0 1',
+              marks: { e2: 'selected', e3: 'legal', e4: 'legal', d3: 'capture', f3: 'capture' },
+              caption: 'White pawn on e2: Advances 1 square (e3) or 2 squares on its first move (e4, green dots), and captures diagonally forward on d3 and f3 (red rings).',
+              moveText: 'Moves straight forward one square at a time. From its starting rank (2nd for White, 7th for Black), it has the option to advance two squares forward. Pawns can never move backward.',
+              captureText: 'Cannot capture moving straight ahead! Pawns capture exclusively one square diagonally forward. If a piece blocks the square directly in front, the pawn cannot advance.',
+              tip: 'Although worth only 1 point, pawns possess game-changing potential: reaching the 8th rank promotes them into a Queen!'
+            },
+            {
+              id: 'knight',
+              icon: '♘',
+              name: 'Knight',
+              value: '3 pts',
+              type: 'L-shape jump (can leap)',
+              fen: '8/8/5p2/2r1p3/4N3/4P3/8/8 w - - 0 1',
+              marks: { e4: 'selected', c3: 'legal', d2: 'legal', d6: 'legal', f2: 'legal', g3: 'legal', g5: 'legal', c5: 'capture', f6: 'capture' },
+              caption: 'Knight on e4 commands 8 L-shaped squares. It leaps over intervening pawns on e3 and e5 to reach legal squares (green dots) and capture enemy targets (c5, f6 in red rings).',
+              moveText: 'Moves in an L-shape: two squares along a rank/file and one square perpendicularly. The landing square always alternates between light and dark.',
+              captureText: 'The only piece in chess that can jump over other pieces! It captures enemy pieces that sit on its final landing square.',
+              tip: 'A centralized knight controls up to 8 squares, whereas a corner knight controls only 2. Always develop knights toward the center.'
+            },
+            {
+              id: 'bishop',
+              icon: '♗',
+              name: 'Bishop',
+              value: '3 pts',
+              type: 'Unlimited diagonal rays',
+              fen: '8/1r6/8/8/4B3/8/6P1/8 w - - 0 1',
+              marks: { e4: 'selected', b7: 'capture', d5: 'legal', c6: 'legal', f5: 'legal', g6: 'legal', h7: 'legal', d3: 'legal', c2: 'legal', b1: 'legal', f3: 'legal' },
+              caption: 'Bishop on e4 sweeps along diagonals. It captures the rook on b7 (red ring) but cannot leap past obstacles (blocked at g2 and behind b7).',
+              moveText: 'Moves diagonally across open squares for any distance forward or backward. It cannot jump over other pieces.',
+              captureText: 'Captures the first enemy piece along its diagonal ray, coming to rest on that square.',
+              tip: 'A bishop is forever locked to its starting square color. Preserving both bishops (the bishop pair) gives you dominion over all 64 squares.'
+            },
+            {
+              id: 'rook',
+              icon: '♖',
+              name: 'Rook',
+              value: '5 pts',
+              type: 'Unlimited horizontal & vertical rays',
+              fen: '8/4n3/8/8/1P2R3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e7: 'capture', e5: 'legal', e6: 'legal', c4: 'legal', d4: 'legal', f4: 'legal', g4: 'legal', h4: 'legal', e3: 'legal', e2: 'legal', e1: 'legal' },
+              caption: 'Rook on e4 projects orthogonal power along ranks and files. It captures the knight on e7 (red ring) but cannot pass through b4 or behind e7.',
+              moveText: 'Moves along open ranks and files for any number of squares until an obstacle is reached.',
+              captureText: 'Captures the first enemy piece on its rank or file and occupies that square.',
+              tip: 'Rooks are major pieces (5 pts). Place them on open files with no pawns, or penetrate onto the 7th rank to terrorize the enemy position.'
+            },
+            {
+              id: 'queen',
+              icon: '♕',
+              name: 'Queen',
+              value: '9 pts',
+              type: 'Orthogonal + diagonal (most powerful)',
+              fen: '8/4r3/6n1/8/4Q3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e7: 'capture', g6: 'capture', e5: 'legal', e6: 'legal', a4: 'legal', b4: 'legal', c4: 'legal', d4: 'legal', f4: 'legal', g4: 'legal', h4: 'legal', e3: 'legal', e2: 'legal', e1: 'legal', d5: 'legal', c6: 'legal', b7: 'legal', a8: 'legal', f5: 'legal', d3: 'legal', c2: 'legal', b1: 'legal', f3: 'legal', g2: 'legal', h1: 'legal' },
+              caption: 'Queen on e4 combines rook and bishop movements to control 25 squares across 8 directions, ready to capture on e7 and g6 (red rings).',
+              moveText: 'Combines the movement of both Rook and Bishop. She glides along ranks, files, and diagonals for any distance without leaping.',
+              captureText: 'Captures along any of its 8 radiating rays, taking the place of the target piece.',
+              tip: 'Because the Queen is your most valuable piece (9 pts), avoid deploying her too early where enemy minor pieces can chase her with tempo.'
+            },
+            {
+              id: 'king',
+              icon: '♔',
+              name: 'King',
+              value: 'Infinite (vital)',
+              type: 'One square any direction',
+              fen: '3r4/8/8/4p3/4K3/8/8/8 w - - 0 1',
+              marks: { e4: 'selected', e5: 'capture', d3: 'danger', d4: 'danger', d5: 'danger', e3: 'legal', f3: 'legal', f4: 'legal', f5: 'legal' },
+              caption: 'King on e4 steps 1 square in any direction. It can capture e5 (red ring), but can NEVER step onto squares on the d-file (d3, d4, d5 in red) attacked by the d8 rook.',
+              moveText: 'Moves exactly one square in any direction: horizontally, vertically, or diagonally.',
+              captureText: 'Can capture any adjacent unprotected enemy piece.',
+              tip: 'Absolute rule: The King may NEVER move onto a square attacked by an enemy piece. If your king is checkmated, the game is over.'
+            }
+          ]
+        },
+        {
+          id: 'check',
+          title: '3. Check, checkmate, and stalemate',
+          paragraphs: [
+            'Check is an urgent warning that your King is under direct attack. When in check, all other plans are put on hold; your next move must resolve the threat.',
+            'There are only three legal methods to escape check, known worldwide as the CPR rule: Capture, Protect, Run. If none of these three exists, it is Checkmate!'
+          ],
+          cprCards: [
+            { letter: 'C', title: 'Capture the attacker', text: 'Capture the attacking piece using your king or another friendly piece to eliminate the threat.' },
+            { letter: 'P', title: 'Protect / Block the line', text: 'Interpose a friendly piece between the checking piece (Q, R, B) and your king. (Knight checks cannot be blocked!)' },
+            { letter: 'R', title: 'Run to safety', text: 'Step your king to an adjacent square that is free from enemy attack.' }
+          ],
+          compareCards: [
+            { type: 'is-check', title: 'Check', tag: 'Alert', formula: 'King attacked + CPR escape possible', text: 'The game continues. The player must resolve the check immediately on their turn.' },
+            { type: 'is-mate', title: 'Checkmate', tag: 'Game Over', formula: 'King attacked + No CPR escape', text: 'An inescapable attack on the king. The attacking side wins the game immediately! Notation: #' },
+            { type: 'is-stalemate', title: 'Stalemate', tag: 'Draw', formula: 'King NOT attacked + 0 legal moves', text: 'The player to move is not in check, yet has no legal move anywhere. An immediate technical draw!' }
+          ],
+          fen: '7k/6Q1/5K2/8/8/8/8/8 b - - 0 1',
+          marks: { h8: 'check', g7: 'selected' },
+          caption: 'Checkmate: White queen on g7 checks Black king on h8. Protected by f6 king, Black cannot capture, block, or flee.'
+        },
+        {
+          id: 'special',
+          title: '4. Three special rules (Castling, En Passant, Promotion)',
+          paragraphs: [
+            'Chess includes three special moves that bend normal piece movement: Castling for king protection, En Passant for passing pawns, and Promotion for pawn evolution.'
+          ],
+          specialRules: [
+            {
+              title: '1. Castling (Dual move of King and Rook)',
+              boards: [
+                {
+                  label: 'Ready to castle',
+                  fen: 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1',
+                  marks: { e1: 'selected', g1: 'legal', c1: 'legal', h1: 'highlight', a1: 'highlight' },
+                  caption: 'White king (e1) and rooks (a1, h1) have not moved and all squares between them are open.'
+                },
+                {
+                  label: 'After kingside castling (O-O)',
+                  fen: 'r3k2r/8/8/8/8/8/8/R4RK1 b kq - 1 1',
+                  marks: { e1: 'from', g1: 'to', h1: 'from', f1: 'to' },
+                  caption: 'King steps two squares right to g1, and the h1 rook hops over to f1.'
+                }
+              ],
+              paragraphs: [
+                'The only move in chess where two pieces move together in one turn: the King tucks into safety while the Rook enters play toward the center.'
+              ],
+              bullets: [
+                'Kingside Castling (O-O, Short): King moves two squares right (g1), and the h1 rook hops over to f1.',
+                'Queenside Castling (O-O-O, Long): King moves two squares left (c1), and the a1 rook hops over to d1.',
+                '❌ Forbidden conditions: ① King or rook has moved before; ② King is currently in check; ③ King passes through or lands on an attacked square. (The rook being attacked does not prevent castling!)'
+              ]
+            },
+            {
+              title: '2. En Passant (Capturing a passing pawn)',
+              boards: [
+                {
+                  label: 'Black advances 2 squares',
+                  fen: '8/8/8/3pP3/8/8/8/8 w - d6 0 1',
+                  marks: { e5: 'selected', d6: 'legal', d5: 'capture' },
+                  caption: 'Immediately after Black advances d7 to d5, White’s e5 pawn can capture en passant onto d6, removing d5.'
+                },
+                {
+                  label: 'En passant completed',
+                  fen: '8/8/3P4/8/8/8/8/8 b - - 0 1',
+                  marks: { e5: 'from', d6: 'to' },
+                  caption: 'White pawn lands on d6, and the passed enemy pawn on d5 is captured and removed from the board.'
+                }
+              ],
+              paragraphs: [
+                'A special capture that occurs when an enemy pawn uses its two-square first move to land directly beside your pawn.'
+              ],
+              bullets: [
+                'Your pawn moves diagonally behind the enemy pawn (to d6), capturing and removing the enemy pawn on d5.',
+                '⚠️ Strict timing: En passant is ONLY valid on the very next turn immediately after the enemy pawn moves two squares. If you play another move, the right expires permanently.'
+              ]
+            },
+            {
+              title: '3. Pawn Promotion (Pawn evolution)',
+              boards: [
+                {
+                  label: 'One move to promotion',
+                  fen: '4k3/4P3/8/8/8/8/8/4K3 w - - 0 1',
+                  marks: { e7: 'selected', e8: 'legal' },
+                  caption: 'White pawn on e7 is one step from reaching the 8th rank (e8) to trigger immediate promotion.'
+                },
+                {
+                  label: 'Promoted to Queen',
+                  fen: '4Qk2/8/8/8/8/8/8/4K3 b - - 0 1',
+                  marks: { e7: 'from', e8: 'to' },
+                  caption: 'The 1-point pawn transforms into a 9-point Queen, instantly delivering dominant attacking power.'
+                }
+              ],
+              paragraphs: [
+                'When a pawn completes its journey to the farthest rank (8th for White, 1st for Black), it immediately transforms into a Queen, Rook, Bishop, or Knight.'
+              ],
+              bullets: [
+                'You may have multiple Queens on the board simultaneously through promotion.',
+                'Over 95% of promotions choose the Queen, but underpromoting to a Knight can deliver vital checks or avoid stalemates.'
+              ]
+            }
+          ]
+        },
+        {
+          id: 'draws',
+          title: '5. Five draw conditions',
+          paragraphs: [
+            'A chess game can end in a draw (tie) instead of a win or loss. Understanding draw rules prevents losing a won game to stalemate and helps you salvage half a point from difficult positions.'
+          ],
+          fen: '7k/5Q2/6K1/8/8/8/8/8 b - - 0 1',
+          marks: { h8: 'danger', f7: 'selected' },
+          caption: 'Stalemate: Black king is not in check, but has zero legal moves. Despite White’s queen advantage, the result is a draw.',
+          bullets: [
+            '1. Stalemate: The player to move is not in check, but has no legal moves anywhere.',
+            '2. Insufficient material: Neither side has enough material to checkmate (K vs K, K+B vs K, K+N vs K).',
+            '3. Threefold repetition: The exact same board position and player turn occur three times.',
+            '4. Fifty-move rule: 50 consecutive moves played by each side without a pawn move or capture.',
+            '5. Draw by agreement: Both players mutually agree to end the game in a draw.'
+          ]
+        },
+        {
+          id: 'notation',
+          title: '6. Reading algebraic notation',
+          paragraphs: [
+            'Algebraic notation is the universal language of chess. Knowing notation allows you to record your games, review mistakes, and study master games.'
+          ],
+          notationTable: [
+            { sym: 'K / Q / R / B / N', meaning: 'Piece letters', example: 'Nf3', desc: 'King (K), Queen (Q), Rook (R), Bishop (B), Knight (N). Pawns use no letter.' },
+            { sym: 'e4 / d5', meaning: 'Pawn move', example: '1. e4 e5', desc: 'Pawn moves list only destination coordinates.' },
+            { sym: 'x', meaning: 'Capture', example: 'Bxf7', desc: 'Bishop captured the piece on f7.' },
+            { sym: '+', meaning: 'Check', example: 'Qh7+', desc: 'Queen moved to h7, placing the enemy king in check.' },
+            { sym: '#', meaning: 'Checkmate', example: 'Qxf7#', desc: 'Move delivers checkmate and concludes the game.' },
+            { sym: 'O-O', meaning: 'Kingside Castle', example: 'O-O', desc: 'Short castling toward the king’s wing.' },
+            { sym: 'O-O-O', meaning: 'Queenside Castle', example: 'O-O-O', desc: 'Long castling toward the queen’s wing.' },
+            { sym: '=Q', meaning: 'Promotion', example: 'e8=Q', desc: 'Pawn promoted to Queen upon reaching e8.' }
+          ],
+          fen: 'rnbqkbnr/pppp1ppp/4p3/8/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+          marks: { e4: 'selected', f3: 'selected' },
+          caption: 'White position after 1. e4 and 2. Nf3.'
+        }
       ],
-      faq: [['Do you actually capture the king?', 'No. The game ends as soon as an unavoidable checkmate is established.'], ['May the rook be attacked during castling?', 'Yes. Only the king’s starting, transit, and destination squares must be safe.'], ['When may a pawn move two squares?', 'Only from its starting rank, and only when both squares in front are empty.']]
+      faq: [
+        ['Do you physically capture the king?', 'No. The game ends the instant checkmate is delivered; the king is never removed from the board.'],
+        ['Can you castle if the rook is attacked?', 'Yes! As long as the king’s transit and landing squares are safe and neither piece has moved, the rook being attacked does not prevent castling.'],
+        ['When may a pawn move two squares?', 'Only on its very first move from its home rank (2nd for White, 7th for Black), provided both squares in front are clear.'],
+        ['What is the key difference between checkmate and stalemate?', 'Whether the king is currently in check. If checked with no legal escape, it is Checkmate (loss). If NOT in check with zero legal moves, it is Stalemate (draw).']
+      ]
     }
   },
 

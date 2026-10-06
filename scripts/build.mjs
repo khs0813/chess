@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { Chess, PIECE_SYMBOLS, PIECE_SVGS, colorOf } from '../src/assets/chess-engine.js';
+import { Chess, PIECE_SYMBOLS, PIECE_SVGS, colorOf, squareToIndex } from '../src/assets/chess-engine.js';
 import { SITE, ROUTES, route } from '../src/content/site.mjs';
 import { UI, HOME, COURSE_SUMMARIES } from '../src/content/content.mjs';
 import { COURSES } from '../src/content/courses.mjs';
@@ -227,6 +227,7 @@ function head({ lang, pageKey, title, description, breadcrumbItems, extraSchema 
 <html lang="${ui.htmlLang}">
 <head>
     <meta charset="utf-8">
+    <script>document.documentElement.classList.add('js');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>${esc(title)}</title>
     <meta name="description" content="${esc(description)}">
@@ -335,16 +336,54 @@ function renderBreadcrumbs(items, lang) {
   }).join('')}</nav>`;
 }
 
-function renderBoard(fen, label = 'Chess position', compact = false) {
-  const game = new Chess(fen);
-  return `<div class="${compact ? 'mini-board' : 'diagram-board'}" role="img" aria-label="${esc(label)}">${game.board.map((piece, index) => {
+function parseFenBoard(fen) {
+  try {
+    const parts = String(fen).trim().split(/\s+/);
+    const rows = parts[0].split('/');
+    if (rows.length !== 8) return null;
+    const board = [];
+    for (const row of rows) {
+      for (const token of row) {
+        if (/^[1-8]$/.test(token)) {
+          const empty = Number(token);
+          for (let i = 0; i < empty; i += 1) board.push(null);
+        } else if (/^[prnbqkPRNBQK]$/.test(token)) {
+          board.push(token);
+        }
+      }
+    }
+    return board.length === 64 ? board : null;
+  } catch {
+    return null;
+  }
+}
+
+function renderBoard(fen, label = 'Chess position', compact = false, marks = {}) {
+  const board = parseFenBoard(fen) || new Chess(fen).board;
+  const markMap = new Map();
+  if (marks) {
+    for (const [key, val] of Object.entries(marks)) {
+      const idx = typeof key === 'number' || /^\d+$/.test(key) ? Number(key) : squareToIndex(key);
+      if (idx >= 0 && idx < 64 && val) {
+        const valArr = Array.isArray(val) ? val : String(val).trim().split(/\s+/);
+        const classes = valArr
+          .filter(Boolean)
+          .map((v) => (v.startsWith('is-') ? v : `is-${v}`));
+        const existing = markMap.get(idx) || [];
+        markMap.set(idx, [...existing, ...classes]);
+      }
+    }
+  }
+  return `<div class="${compact ? 'mini-board' : 'diagram-board'}" role="img" aria-label="${esc(label)}">${board.map((piece, index) => {
     const row = Math.floor(index / 8);
     const col = index % 8;
     const squareClass = (row + col) % 2 === 0 ? 'light' : 'dark';
+    const markList = markMap.get(index);
+    const markClass = markList?.length ? ` ${markList.join(' ')}` : '';
     const rankCoord = (!compact && col === 0) ? `<span class="diagram-coord coord-rank" aria-hidden="true">${8 - row}</span>` : '';
     const fileCoord = (!compact && row === 7) ? `<span class="diagram-coord coord-file" aria-hidden="true">${String.fromCharCode(97 + col)}</span>` : '';
     const pieceHtml = piece ? `<span class="diagram-piece ${colorOf(piece) === 'w' ? 'white-piece' : 'black-piece'}" aria-hidden="true">${PIECE_SVGS[piece]}</span>` : '';
-    return `<span class="${compact ? 'mini-board-square' : 'diagram-square'} ${squareClass}">${rankCoord}${fileCoord}${pieceHtml}</span>`;
+    return `<span class="${compact ? 'mini-board-square' : 'diagram-square'} ${squareClass}${markClass}">${rankCoord}${fileCoord}${pieceHtml}</span>`;
   }).join('')}</div>`;
 }
 
@@ -465,7 +504,7 @@ ${renderCoupangBanner(lang)}
 
 function renderDiagram(lesson) {
   if (!lesson.fen) return '';
-  return `<figure class="diagram-wrap">${renderBoard(lesson.fen, lesson.caption || lesson.title)}<figcaption class="diagram-caption">${esc(lesson.caption || '')}</figcaption></figure>`;
+  return `<figure class="diagram-wrap">${renderBoard(lesson.fen, lesson.caption || lesson.title, false, lesson.marks || {})}<figcaption class="diagram-caption">${esc(lesson.caption || '')}</figcaption></figure>`;
 }
 
 function courseSchema(course, lang, key) {
@@ -518,6 +557,136 @@ function articleSchema(c, lang, key) {
   };
 }
 
+function renderPieceExplorer(pieces, lang) {
+  const tabs = pieces.map((p, idx) => `
+    <button type="button" class="piece-tab ${idx === 0 ? 'is-active' : ''}" id="piece-tab-${esc(p.id)}" data-piece-target="${esc(p.id)}" role="tab" aria-selected="${idx === 0 ? 'true' : 'false'}" aria-controls="piece-panel-${esc(p.id)}" tabindex="${idx === 0 ? '0' : '-1'}">
+      <span class="piece-tab-icon" aria-hidden="true">${esc(p.icon)}</span>
+      <span>${esc(p.name)}</span>
+      <span class="piece-tab-val">${esc(p.value)}</span>
+    </button>`).join('');
+
+  const panels = pieces.map((p, idx) => `
+    <div class="piece-panel ${idx === 0 ? 'is-active' : ''}" id="piece-panel-${esc(p.id)}" data-piece-panel="${esc(p.id)}" role="tabpanel" aria-labelledby="piece-tab-${esc(p.id)}">
+      <div class="piece-panel-content">
+        <figure class="diagram-wrap-panel">
+          ${renderBoard(p.fen, `${p.name} 이동 다이어그램`, false, p.marks || {})}
+          <figcaption class="diagram-caption">${esc(p.caption)}</figcaption>
+        </figure>
+        <div class="piece-meta">
+          <div class="piece-header">
+            <h3 class="piece-title">${esc(p.name)}</h3>
+            <span class="piece-badge-val">${esc(p.value)}</span>
+            <span class="piece-badge-type">${esc(p.type)}</span>
+          </div>
+          <div class="piece-info-box">
+            <span class="piece-info-label">${lang === 'ko' ? '이동 방법' : 'How it moves'}</span>
+            <p class="piece-info-text">${esc(p.moveText)}</p>
+          </div>
+          <div class="piece-info-box">
+            <span class="piece-info-label">${lang === 'ko' ? '상대 기물 잡기' : 'Capturing'}</span>
+            <p class="piece-info-text">${esc(p.captureText)}</p>
+          </div>
+          <div class="piece-tip">
+            <span aria-hidden="true">💡</span>
+            <span>${esc(p.tip)}</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  return `
+  <div class="diagram-legend" aria-hidden="true">
+    <span class="legend-item"><span class="legend-dot is-legal"></span> ${lang === 'ko' ? '이동 가능 칸' : 'Legal move'}</span>
+    <span class="legend-item"><span class="legend-ring is-capture"></span> ${lang === 'ko' ? '기물 잡기' : 'Capture target'}</span>
+    <span class="legend-item"><span class="legend-box is-selected"></span> ${lang === 'ko' ? '선택된 기물' : 'Selected piece'}</span>
+    <span class="legend-item"><span class="legend-box is-danger"></span> ${lang === 'ko' ? '위험·금지 칸' : 'Forbidden / Danger'}</span>
+  </div>
+  <div class="piece-explorer" data-piece-explorer>
+    <div class="piece-tabs" role="tablist" aria-label="${lang === 'ko' ? '체스 기물 선택' : 'Choose chess piece'}">${tabs}</div>
+    ${panels}
+  </div>`;
+}
+
+function renderGuideSection(section, lang) {
+  let innerHtml = '';
+  if (section.paragraphs?.length) {
+    innerHtml += section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('');
+  }
+  if (section.setupRules?.length) {
+    innerHtml += `<div class="setup-rules-grid">${section.setupRules.map((r) => `
+      <div class="setup-rule-card">
+        <span class="setup-rule-badge">${esc(r.badge)}</span>
+        <h3>${esc(r.title)}</h3>
+        <p>${esc(r.text)}</p>
+      </div>`).join('')}</div>`;
+  }
+  if (section.bullets?.length) {
+    innerHtml += `<ul class="arrow-list">${section.bullets.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>`;
+  }
+  if (section.pieces?.length) {
+    innerHtml += renderPieceExplorer(section.pieces, lang);
+  }
+  if (section.cprCards?.length) {
+    innerHtml += `<div class="cpr-grid">${section.cprCards.map((c) => `
+      <div class="cpr-card">
+        <span class="cpr-badge">${esc(c.letter)}</span>
+        <strong>${esc(c.title)}</strong>
+        <p>${esc(c.text)}</p>
+      </div>`).join('')}</div>`;
+  }
+  if (section.compareCards?.length) {
+    innerHtml += `<div class="rule-compare-grid">${section.compareCards.map((c) => `
+      <div class="rule-compare-card ${esc(c.type)}">
+        <div class="compare-header">
+          <h3>${esc(c.title)}</h3>
+          <span class="compare-tag">${esc(c.tag)}</span>
+        </div>
+        <p class="compare-formula">${esc(c.formula)}</p>
+        <p>${esc(c.text)}</p>
+      </div>`).join('')}</div>`;
+  }
+  if (section.specialRules?.length) {
+    innerHtml += section.specialRules.map((sr) => {
+      let mediaHtml = '';
+      if (sr.boards?.length) {
+        mediaHtml = `<div class="special-rule-boards">${sr.boards.map((b) => `
+          <figure class="diagram-wrap-panel">
+            ${b.label ? `<div class="diagram-board-badge">${esc(b.label)}</div>` : ''}
+            ${renderBoard(b.fen, b.caption || sr.title, false, b.marks || {})}
+            <figcaption class="diagram-caption">${esc(b.caption || '')}</figcaption>
+          </figure>`).join('')}</div>`;
+      } else if (sr.fen) {
+        mediaHtml = `
+          <figure class="diagram-wrap-panel">
+            ${renderBoard(sr.fen, sr.title, false, sr.marks || {})}
+            <figcaption class="diagram-caption">${esc(sr.caption || '')}</figcaption>
+          </figure>`;
+      }
+      return `
+      <div class="special-rule-card">
+        <h3>${esc(sr.title)}</h3>
+        <div class="special-rule-layout ${sr.boards?.length > 1 ? 'has-multiple-boards' : ''}">
+          ${mediaHtml}
+          <div class="special-rule-desc">
+            ${sr.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
+            ${sr.bullets?.length ? `<ul class="arrow-list">${sr.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if (section.notationTable?.length) {
+    innerHtml += `<div class="notation-table-wrap"><table class="notation-table">
+      <thead><tr><th>${lang === 'ko' ? '기호' : 'Symbol'}</th><th>${lang === 'ko' ? '의미' : 'Meaning'}</th><th>${lang === 'ko' ? '실전 기보 예시' : 'Example'}</th><th>${lang === 'ko' ? '해설' : 'Explanation'}</th></tr></thead>
+      <tbody>${section.notationTable.map((row) => `<tr><td><span class="notation-code">${esc(row.sym)}</span></td><td><strong>${esc(row.meaning)}</strong></td><td><span class="notation-code">${esc(row.example)}</span></td><td>${esc(row.desc)}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+  if (section.fen) {
+    innerHtml += `<figure class="diagram-wrap">${renderBoard(section.fen, section.caption || section.title, false, section.marks || {})}<figcaption class="diagram-caption">${esc(section.caption || '')}</figcaption></figure>`;
+  }
+  return `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${innerHtml}</section>`;
+}
+
 function renderGuide(lang, key) {
   const c = GUIDES[key][lang];
   const labels = TEMPLATE_LABELS[lang];
@@ -528,7 +697,7 @@ ${renderHeader(lang, key)}
 <main id="main">
 ${renderCoupangBanner(lang)}
 <section class="page-hero"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.chessGuide)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
-<section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => `<section id="${esc(section.id)}"><h2>${esc(section.title)}</h2>${section.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}${section.bullets?.length ? `<ul class="arrow-list">${section.bullets.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}${section.fen ? `<figure class="diagram-wrap">${renderBoard(section.fen, section.caption || section.title)}<figcaption class="diagram-caption">${esc(section.caption || '')}</figcaption></figure>` : ''}</section>`).join('')}
+<section class="section"><div class="container article-layout"><article class="article-body">${c.sections.map((section) => renderGuideSection(section, lang)).join('')}
 <section id="faq"><h2>${esc(UI[lang].faq)}</h2><div class="faq-list">${c.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
 <div class="cta-panel"><div><h2>${lang === 'ko' ? '읽은 내용을 체스판에서 확인하세요' : 'Test the idea on the board'}</h2><p>${lang === 'ko' ? '컴퓨터와 대국하며 오늘 배운 주제를 한 가지 목표로 정해 보세요.' : 'Play the computer with one lesson from this guide as your game goal.'}</p></div><a class="button" href="${route('play', lang)}">${esc(UI[lang].playNow)}</a></div></article><aside class="article-rail"><nav class="toc"><strong>${esc(UI[lang].toc)}</strong><ol>${toc.map(([id, label]) => `<li><a href="#${id}">${esc(label)}</a></li>`).join('')}<li><a href="#faq">${esc(UI[lang].faq)}</a></li></ol></nav></aside></div></section></main>${renderFooter(lang)}`;
 }

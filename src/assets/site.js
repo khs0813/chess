@@ -62,3 +62,48 @@ for (const copyButton of document.querySelectorAll('[data-copy-value]')) {
     }
   });
 }
+
+for (const explorer of document.querySelectorAll('[data-piece-explorer]')) {
+  const tabs = [...explorer.querySelectorAll('[data-piece-target]')];
+  const panels = [...explorer.querySelectorAll('[data-piece-panel]')];
+
+  function activate(targetId) {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.pieceTarget === targetId;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+      tab.setAttribute('tabindex', active ? '0' : '-1');
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.piecePanel === targetId;
+      panel.classList.toggle('is-active', active);
+      if (active) panel.removeAttribute('hidden');
+      else panel.setAttribute('hidden', '');
+    });
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      activate(tab.dataset.pieceTarget);
+    });
+
+    tab.addEventListener('keydown', (e) => {
+      let nextIndex = index;
+      if (e.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') nextIndex = 0;
+      else if (e.key === 'End') nextIndex = tabs.length - 1;
+      else return;
+
+      e.preventDefault();
+      tabs[nextIndex].focus();
+      activate(tabs[nextIndex].dataset.pieceTarget);
+    });
+  });
+
+  const activeTab = tabs.find((t) => t.classList.contains('is-active')) || tabs[0];
+  if (activeTab) {
+    activate(activeTab.dataset.pieceTarget);
+  }
+}
+

@@ -18,6 +18,7 @@ export const COURSES = {
           ],
           bullets: ['기물은 자기 편 기물이 있는 칸으로 이동할 수 없습니다.', '상대 기물이 있는 칸으로 이동하면 그 기물을 잡습니다.', '킹을 체크 상태로 남기는 수는 합법적인 수가 아닙니다.'],
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          marks: { h1: 'highlight', d1: 'highlight', d8: 'highlight' },
           caption: '초기 배치. 판 아래쪽의 파일(a~h)과 왼쪽의 랭크(1~8) 좌표를 확인하세요. 백 기준 오른쪽 아래 h1 칸은 밝은색이며, 퀸은 자기 색 칸(백 퀸 d1, 흑 퀸 d8)에서 시작합니다.',
           keyPoint: '기물을 움직이기 전에 출발 칸과 도착 칸의 좌표를 소리 내어 읽어 보세요.',
           practice: '그림의 좌표를 보면서 a1, d4, e4, h8의 위치를 직접 손가락으로 찾아 보세요.'
@@ -31,6 +32,7 @@ export const COURSES = {
           ],
           bullets: ['중앙의 e4, d4, e5, d5를 점유하거나 통제합니다.', '나이트는 보통 c3·f3 또는 c6·f6로 전개합니다.', '한 기물을 여러 번 움직이기 전에 다른 기물도 게임에 참여시킵니다.'],
           fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+          marks: { e4: 'selected', f3: 'selected', e5: 'selected', c6: 'selected' },
           caption: '백은 e4와 Nf3로 중앙을 압박하고, 흑은 e5와 Nc6로 대응했습니다. 양쪽 모두 자연스러운 전개입니다.',
           keyPoint: '초반 목표는 즉시 공격이 아니라 더 많은 기물을 좋은 칸에 배치하는 것입니다.',
           practice: '초급 AI와 10수를 두되, 퀸을 움직이기 전에 두 나이트와 두 비숍 중 세 기물을 전개해 보세요.'
@@ -44,6 +46,7 @@ export const COURSES = {
           ],
           bullets: ['체크를 무시하고 다른 공격을 하는 수는 둘 수 없습니다.', '나이트 체크는 공격선을 막을 수 없어 킹 이동 또는 나이트 잡기만 가능합니다.', '체크메이트와 스테일메이트의 차이는 현재 킹이 공격받고 있는지입니다.'],
           fen: 'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4',
+          marks: { e8: 'check', f7: 'capture' },
           caption: '흑 킹은 체크를 받고 있고 피할 칸도, 퀸을 잡을 방법도 없습니다. 초보자에게 유명한 빠른 메이트 형태입니다.',
           keyPoint: '내 수를 두기 전 “상대 킹에게 체크인가?”보다 먼저 “내 킹은 안전한가?”를 확인하세요.',
           practice: '대국 중 체크를 받으면 세 대응 방식인 이동·잡기·막기를 차례대로 점검해 보세요.'
@@ -57,6 +60,7 @@ export const COURSES = {
           ],
           bullets: ['룩이 공격받는 것은 캐슬링을 막지 않지만 킹이 지나는 칸의 공격은 막습니다.', '앙파상 기회는 바로 다음 한 수에만 존재합니다.', '승격은 이미 퀸이 남아 있어도 새 퀸을 선택할 수 있습니다.'],
           fen: 'r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 5',
+          marks: { e1: 'selected', g1: 'legal', h1: 'highlight', f1: 'legal' },
           caption: '백 킹과 h1 룩 사이가 비었고 경로가 안전하다면 백은 O-O로 킹사이드 캐슬링할 수 있습니다.',
           keyPoint: '대부분의 입문 대국에서는 10수 안에 캐슬링하는 것이 킹 안전과 룩 연결에 도움이 됩니다.',
           practice: '새 대국에서 백과 흑 어느 쪽을 잡아도 캐슬링을 먼저 완성해 보세요.'
@@ -81,6 +85,7 @@ export const COURSES = {
           ],
           bullets: ['큰 기물을 상대 킹 바로 옆에 보호 없이 두지 않습니다.', '스테일메이트를 피하려면 체크가 아닌 수를 둘 때 상대의 이동 칸을 확인합니다.', '킹도 엔드게임에서는 적극적인 공격 기물입니다.'],
           fen: '8/8/8/8/8/4K3/6R1/7k w - - 0 1',
+          marks: { g2: 'selected', h2: 'legal', h1: 'danger' },
           caption: '백은 킹으로 접근해 흑 킹을 가장자리에서 가둔 뒤 룩 체크로 마무리할 수 있습니다.',
           keyPoint: '공간 줄이기 → 내 킹 접근 → 마지막 체크의 세 단계로 생각하세요.',
           practice: '위 포지션을 보며 공간 줄이기, 내 킹 접근, 마지막 체크 순서로 룩 메이트 절차를 말해 보세요.'
@@ -295,6 +300,7 @@ export const COURSES = {
           ],
           bullets: ['A piece cannot move onto a square occupied by a friendly piece.', 'Moving onto an enemy piece captures it.', 'A move that leaves your own king in check is illegal.'],
           fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+          marks: { h1: 'highlight', d1: 'highlight', d8: 'highlight' },
           caption: 'The starting position. Note the coordinate labels: files a–h along the bottom and ranks 1–8 on the left. White’s bottom-right square (h1) is light, and queens start on their own color (White d1, Black d8).',
           keyPoint: 'Say the starting and destination coordinates aloud before moving a piece.',
           practice: 'Use the coordinate labels on the board to locate squares a1, d4, e4, and h8 with your finger.'
@@ -308,6 +314,7 @@ export const COURSES = {
           ],
           bullets: ['Occupy or control e4, d4, e5, and d5.', 'Knights often develop naturally to c3 and f3 or c6 and f6.', 'Bring more pieces into the game before moving the same piece again.'],
           fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+          marks: { e4: 'selected', f3: 'selected', e5: 'selected', c6: 'selected' },
           caption: 'White uses e4 and Nf3 to influence the center, while Black answers with e5 and Nc6. Both sides are developing naturally.',
           keyPoint: 'The early goal is not an immediate attack; it is placing more pieces on useful squares.',
           practice: 'Play ten moves against the beginner AI and develop at least three minor pieces before moving your queen.'
@@ -321,6 +328,7 @@ export const COURSES = {
           ],
           bullets: ['You may not ignore check to create a threat elsewhere.', 'A knight check cannot be blocked; move the king or capture the knight.', 'The difference between mate and stalemate is whether the king is currently attacked.'],
           fen: 'r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4',
+          marks: { e8: 'check', f7: 'capture' },
           caption: 'Black is in check and cannot escape or capture the queen. This is a famous early mating pattern.',
           keyPoint: 'Before asking whether you can give check, confirm that your own king is safe.',
           practice: 'Whenever you are checked, name all three response types—move, capture, block—before choosing.'
@@ -334,6 +342,7 @@ export const COURSES = {
           ],
           bullets: ['An attacked rook does not prevent castling, but an attacked king transit square does.', 'The en passant opportunity lasts for one reply only.', 'You may promote to a second queen even if your original queen remains.'],
           fen: 'r1bqk2r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 5',
+          marks: { e1: 'selected', g1: 'legal', h1: 'highlight', f1: 'legal' },
           caption: 'If the path is safe and both pieces are unmoved, White can castle kingside with O-O.',
           keyPoint: 'In most beginner games, castling within the first ten moves improves king safety and connects the rooks.',
           practice: 'Start a fresh game and make castling your first structural goal with either color.'
@@ -358,6 +367,7 @@ export const COURSES = {
           ],
           bullets: ['Do not place the major piece next to the enemy king without protection.', 'When making a non-checking move, verify that the enemy still has a legal square.', 'Your king becomes an active attacking piece in the endgame.'],
           fen: '8/8/8/8/8/4K3/6R1/7k w - - 0 1',
+          marks: { g2: 'selected', h2: 'legal', h1: 'danger' },
           caption: 'White can approach with the king, confine Black to the edge, and finish with a protected rook check.',
           keyPoint: 'Think in three phases: reduce space, approach with the king, deliver the final check.',
           practice: 'Use the diagram above to name the three rook-mate phases: reduce space, approach with the king, deliver the final check.'
