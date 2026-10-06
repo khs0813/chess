@@ -471,9 +471,9 @@ function renderPlay(lang) {
   return `${head({ lang, pageKey: 'play', title: c.metaTitle, description: c.metaDescription, breadcrumbItems: crumbs, extraSchema: [appSchema, faqSchema(c.faq)], scripts: pageScripts('play', lang, ['/assets/game.js']) })}
 ${renderHeader(lang, 'play')}
 <main id="main">
-  ${renderCoupangBanner(lang)}
   <section class="page-hero page-hero--play"><div class="container">${renderBreadcrumbs(crumbs, lang)}<span class="eyebrow">${esc(labels.playChess)}</span><h1>${esc(c.title)}</h1><p class="page-intro">${esc(c.intro)}</p></div></section>
   <section class="chess-app-shell"><div class="container">${gameApp(lang)}
+    ${renderCoupangBanner(lang)}
     <div class="play-guide"><div class="section-heading"><div><span class="eyebrow">${esc(labels.aiLevels)}</span><h2>${lang === 'ko' ? '난이도 선택 기준' : 'Choose a useful level'}</h2></div></div><div class="play-guide-grid">${c.difficulty.map((item, index) => `<article class="card"><span class="card-icon">${index + 1}</span><h3>${esc(item.title)}</h3><p>${esc(item.text)}</p></article>`).join('')}</div></div>
   </div></section>
   <section class="section section-soft"><div class="narrow"><div class="section-heading"><div><span class="eyebrow">${esc(labels.howToPractice)}</span><h2>${lang === 'ko' ? '대국을 학습으로 바꾸는 4단계' : 'Turn a game into four learning steps'}</h2></div></div><div class="lesson-list">${c.steps.map(([title, text], index) => `<article class="lesson-card"><div class="lesson-head"><span class="lesson-number">${index + 1}</span><div><h3>${esc(title)}</h3><p>${esc(text)}</p></div></div></article>`).join('')}</div></div></section>

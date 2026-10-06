@@ -1407,6 +1407,10 @@ main {
   padding: clamp(3rem, 7vw, 5.5rem) 0 2.8rem;
 }
 
+.page-hero--play {
+  padding: clamp(1.6rem, 3.8vw, 2.8rem) 0 clamp(1.2rem, 2.2vw, 1.8rem);
+}
+
 .page-hero .narrow,
 .page-hero .container {
   position: relative;
@@ -1809,8 +1813,9 @@ tr:last-child td {
   min-height: 140px;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
 }
 
 .coupang-banner-frame iframe {
@@ -1826,6 +1831,14 @@ tr:last-child td {
   color: var(--muted);
   text-align: center;
   line-height: 1.4;
+}
+
+.chess-app-shell .coupang-banner-section {
+  padding: 1.75rem 0 0;
+}
+
+.chess-app-shell .coupang-banner-container {
+  width: 100%;
 }
 
 /* Chess application */
